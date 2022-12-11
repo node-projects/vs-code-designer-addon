@@ -26,7 +26,16 @@
 				"title": "Open designer view",
 				"category": "Designer"
 			}
-		]
+		],
+		"views": {
+			"explorer": [
+				{
+					"id": "exampleView",
+					"name": "exampleViewAAAA"
+				}
+			]
+		},
+		"activationEvents": [ "onView:exampleView" ]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",

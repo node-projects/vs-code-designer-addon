@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { TreeDataProvider } from './TreeDataProvider';
 
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
@@ -18,6 +19,8 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		});
 	}
+
+	vscode.window.registerTreeDataProvider("exampleView", new TreeDataProvider)
 }
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions & vscode.WebviewPanelOptions {
@@ -64,6 +67,7 @@ class DesignerPanel {
 			column || vscode.ViewColumn.One,
 			getWebviewOptions(extensionUri),
 		);
+
 
 		DesignerPanel.currentPanel = new DesignerPanel(panel, extensionUri);
 	}
