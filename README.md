@@ -1,6 +1,10 @@
 # vs-code-designer-addon
 A VSCode Addon using the web-component-designer
 
+## sample image
+
+![sample](sample.png)
+
 ## Running the example
 
 - Open this example in VS Code 1.47+
