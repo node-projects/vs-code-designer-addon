@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-export class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
+export class DesignerTreeView implements vscode.TreeDataProvider<TreeItem>, vscode.TreeDragAndDropController<TreeItem> {
 	onDidChangeTreeData?: vscode.Event<TreeItem|null|undefined>|undefined;
   
 	data: TreeItem[];
@@ -23,6 +23,18 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 		return this.data;
 	  }
 	  return element.children;
+	}
+
+	
+	dropMimeTypes = ['application/vnd.code.tree.testViewDragAndDrop'];
+	dragMimeTypes = ['text/uri-list'];
+
+	handleDrag(source: readonly TreeItem[], dataTransfer: vscode.DataTransfer, token: vscode.CancellationToken): void | Thenable<void> {
+		debugger;
+	}
+
+	handleDrop(target: TreeItem | undefined, dataTransfer: vscode.DataTransfer, token: vscode.CancellationToken): void | Thenable<void> {
+		debugger;
 	}
   }
 

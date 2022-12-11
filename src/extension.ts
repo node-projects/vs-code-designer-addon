@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { TreeDataProvider } from './TreeDataProvider';
+import { DesignerTreeView } from './DesignerTreeView';
 
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
@@ -20,7 +20,18 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 	}
 
-	vscode.window.registerTreeDataProvider("exampleView", new TreeDataProvider)
+	//vscode.window.registerTreeDataProvider("exampleView", new TreeDataProvider);
+	let t = new DesignerTreeView;
+	vscode.window.createTreeView("exampleView", {
+		treeDataProvider: t,
+		dragAndDropController: t,
+		showCollapseAll: true,
+		canSelectMany: true
+	});
+
+	vscode.window.onDidChangeActiveTextEditor((e)=> {
+console.log("editorchanged", e);
+	});
 }
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions & vscode.WebviewPanelOptions {
