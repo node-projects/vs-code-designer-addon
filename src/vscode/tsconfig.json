@@ -3,10 +3,10 @@
 		"module": "commonjs",
 		"target": "es2020",
 		"lib": ["es2020"],
-		"outDir": "out",
+		"outDir": "../../out/vscode",
 		"sourceMap": true,
 		"strict": true,
-		"rootDir": "src"
+		"rootDir": "."
 	},
 	"exclude": ["node_modules", ".vscode-test"]
 }

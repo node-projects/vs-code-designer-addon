@@ -18,13 +18,18 @@
 	"activationEvents": [
 		"onWebviewPanel:designer"
 	],
-	"main": "./out/extension.js",
+	"main": "./out/vscode/extension.js",
 	"contributes": {
-		"commands": [
+		"customEditors": [
 			{
-				"command": "designer.open",
-				"title": "Open designer view",
-				"category": "Designer"
+				"viewType": "designer.designerTextEditor",
+				"displayName": "Designer",
+				"selector": [
+					{
+						"filenamePattern": "*.html"
+					}
+				], 
+				"priority": "option"
 			}
 		],
 		"views": {
@@ -34,16 +39,14 @@
 					"name": "exampleViewAAAA"
 				}
 			]
-		},
-		"activationEvents": [
-			"onView:exampleView"
-		]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
 		"lint": "eslint \"src/**/*.ts\"",
-		"watch": "tsc -w -p ./"
+		"watch": "tsc -w -p ./src/vscode",
+		"watchWebview": "tsc -w -p ./src/webview"
 	},
 	"devDependencies": {
 		"@types/node": "^18.11.13",

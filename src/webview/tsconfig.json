@@ -1,14 +1,12 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
+		"module": "ESNext",
 		"target": "es2020",
-		"jsx": "preserve",
-		"checkJs": true,
+		"moduleResolution": "node",
 		"strict": true,
-		"strictFunctionTypes": true,
-		"lib": [
-			"dom"
-		]
+		"lib": [ "dom"],
+		"rootDir": ".",
+		"outDir": "../../out/webview",
 	},
 	"exclude": [
 		"node_modules",
