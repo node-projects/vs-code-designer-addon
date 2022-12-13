@@ -96,6 +96,8 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 
 		// And the uri we use to load this script in the webview
 		const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
+		const folder= vscode?.workspace?.workspaceFolders?.[0];
+		const workspaceUri = webview.asWebviewUri(<any>folder?.uri);
 		const nonce = getNonce();
 
 		return /* html */`
@@ -113,6 +115,9 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 				"shimMode": true
 			  }
 			</script>
+			<script nonce="${nonce}" type="text/javascript">
+			  window['__$vscodeWorkspaceUri'] = '${workspaceUri}'
+			</script>
 			<script nonce="${nonce}" src="${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/es-module-shims/dist/es-module-shims.js'))}"></script>
 			<script nonce="${nonce}">
 			  const importMap = {
@@ -128,8 +133,6 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 			  //@ts-ignore
 			  importShim.addImportMap(importMap);
 			</script>
-
-			<title>Cat Coding</title>
 		</head>
 		<body style="height: 100%; width: 100%">
 			<script nonce="${nonce}" type="module">

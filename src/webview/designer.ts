@@ -1,12 +1,15 @@
 const vscode = acquireVsCodeApi();
+//@ts-ignore
+const workspaceuri = window['__$vscodeWorkspaceUri'];
 
 //const oldState = vscode.getState();
 //vscode.setState({ count: currentCount });
 
-console.log(import.meta.url)
+console.log(workspaceuri)
 const url = new URL(import.meta.url);
 const path = url.pathname.replace("out/webview/designer.js", "");
 
+import { DomHelper } from '@node-projects/base-custom-webcomponent';
 import { DesignerView, IDesignItem, NodeHtmlParserService, } from '@node-projects/web-component-designer';
 import createDefaultServiceContainer from '@node-projects/web-component-designer/dist/elements/services/DefaultServiceBootstrap.js';
 await window.customElements.whenDefined("node-projects-designer-view")
@@ -31,11 +34,39 @@ function findDesignItem(designItem: IDesignItem, position: number): IDesignItem 
     return designItem;
 }
 
+function fixDesignItemsPaths(designItem: IDesignItem) {
+    if (designItem.hasChildren) {
+        for (let d of designItem.children()) {
+            fixDesignItemsPaths(d);
+        }
+    }
+    if (designItem.name == 'img' && (<HTMLImageElement>designItem.element).src)
+        (<HTMLImageElement>designItem.element).src = workspaceuri + designItem.getAttribute('src');
+    else if (designItem.name == 'link' && (<HTMLLinkElement>designItem.element).href)
+        (<HTMLLinkElement>designItem.element).href = workspaceuri + designItem.getAttribute('href');
+}
+
+async function parseHTML(html: string) {
+    const parserService = designerView.serviceContainer.htmlParserService;
+    if (!html) {
+        designerView.instanceServiceContainer.undoService.clear();
+        designerView.designerCanvas.overlayLayer.removeAllOverlays();
+        DomHelper.removeAllChildnodes(designerView.designerCanvas.overlayLayer);
+        designerView.designerCanvas.rootDesignItem.clearChildren();
+    }
+    else {
+        const designItems = await parserService.parse(html, designerView.serviceContainer, designerView.instanceServiceContainer);
+        for (let d of designItems)
+            fixDesignItemsPaths(d)
+        designerView.designerCanvas.setDesignItems(designItems)
+    }
+}
+
 window.addEventListener('message', event => {
     const message = event.data;
     switch (message.type) {
         case 'update':
-            designerView.parseHTML(message.text)
+            parseHTML(message.text)
             break;
         case 'changeSelection':
             const pos = message.position;
