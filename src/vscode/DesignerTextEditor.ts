@@ -9,18 +9,6 @@ export function getNonce() {
 	return text;
 }
 
-/**
- * Provider for cat scratch editors.
- * 
- * Cat scratch editors are used for `.cscratch` files, which are just json files.
- * To get started, run this extension and open an empty `.cscratch` file in VS Code.
- * 
- * This provider demonstrates:
- * 
- * - Setting up the initial webview for a custom editor.
- * - Loading scripts and styles in a custom editor.
- * - Synchronizing changes between a text document and a custom editor.
- */
 export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 
 	public static register(context: vscode.ExtensionContext): vscode.Disposable {

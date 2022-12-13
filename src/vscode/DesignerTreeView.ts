@@ -25,16 +25,15 @@ export class DesignerTreeView implements vscode.TreeDataProvider<TreeItem>, vsco
 	  return element.children;
 	}
 
-	
 	dropMimeTypes = ['application/vnd.code.tree.testViewDragAndDrop'];
 	dragMimeTypes = ['text/uri-list'];
 
 	handleDrag(source: readonly TreeItem[], dataTransfer: vscode.DataTransfer, token: vscode.CancellationToken): void | Thenable<void> {
-		debugger;
+		//debugger;
 	}
 
 	handleDrop(target: TreeItem | undefined, dataTransfer: vscode.DataTransfer, token: vscode.CancellationToken): void | Thenable<void> {
-		debugger;
+		//debugger;
 	}
   }
 
