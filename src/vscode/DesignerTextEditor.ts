@@ -74,9 +74,17 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 			}
 		});
 
+		const changeTextEditorSlection = vscode.window.onDidChangeTextEditorSelection(e => {
+			webviewPanel.webview.postMessage({
+				type: 'changeSelection',
+				position: e.textEditor.document.offsetAt(e.selections[0].start),
+			});
+		});
+
 		// Make sure we get rid of the listener when our editor is closed.
 		webviewPanel.onDidDispose(() => {
 			changeDocumentSubscription.dispose();
+			changeTextEditorSlection.dispose();
 		});
 
 		// Receive message from the webview.
@@ -100,16 +108,6 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 
 		// And the uri we use to load this script in the webview
 		const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
-
-		// Local path to css styles
-		const styleResetPath = vscode.Uri.joinPath(this.context.extensionUri, 'media', 'reset.css');
-		const stylesPathMainPath = vscode.Uri.joinPath(this.context.extensionUri, 'media', 'vscode.css');
-
-		// Uri to load styles into webview
-		const stylesResetUri = webview.asWebviewUri(styleResetPath);
-		const stylesMainUri = webview.asWebviewUri(stylesPathMainPath);
-
-		// Use a nonce to whitelist which scripts can be run
 		const nonce = getNonce();
 
 		return /* html */`
@@ -118,33 +116,25 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 		<head>
 			<meta charset="UTF-8">
 
-			<!--
-				Use a content security policy to only allow loading images from https or from our extension directory,
-				and only allow scripts that have a specific nonce.
-			-->
-			<metaaaa http-equiv="aaaContent-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">
-
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<!--<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">-->
 
-			<link href="${stylesResetUri}" rel="stylesheet">
-			<link href="${stylesMainUri}" rel="stylesheet">
-
-			<script src="${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/construct-style-sheets-polyfill/dist/adoptedStyleSheets.js'))}"></script>
-			<script type="esms-options">
+			<script nonce="${nonce}" src="${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/construct-style-sheets-polyfill/dist/adoptedStyleSheets.js'))}"></script>
+			<script nonce="${nonce}" type="esms-options">
 			  {
 				"shimMode": true
 			  }
 			</script>
-			<script src="${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/es-module-shims/dist/es-module-shims.js'))}"></script>
-			<script>
+			<script nonce="${nonce}" src="${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/es-module-shims/dist/es-module-shims.js'))}"></script>
+			<script nonce="${nonce}">
 			  const importMap = {
 				imports: {
 				  "@node-projects/base-custom-webcomponent": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/base-custom-webcomponent/dist/index.js'))}",
 				  "@node-projects/base-custom-webcomponent/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/base-custom-webcomponent/'))}",
 				  "@node-projects/web-component-designer": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer/dist/index.js'))}",
 				  "@node-projects/web-component-designer/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer/'))}",
-				  "jquery.fancytree/": "./node_modules/jquery.fancytree/",
-				  "monaco-editor/": "./node_modules/monaco-editor/"
+				  "@node-projects/lean-he-esm": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/lean-he-esm/dist/index.js'))}",
+				  "@node-projects/lean-he-esm/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/lean-he-esm/'))}",
 				}
 			  };
 			  //@ts-ignore
