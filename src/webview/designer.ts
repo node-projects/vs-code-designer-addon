@@ -2,10 +2,6 @@ const vscode = acquireVsCodeApi();
 //@ts-ignore
 const workspaceuri = window['__$vscodeWorkspaceUri'];
 
-//const oldState = vscode.getState();
-//vscode.setState({ count: currentCount });
-
-console.log(workspaceuri)
 const url = new URL(import.meta.url);
 const path = url.pathname.replace("out/webview/designer.js", "");
 
