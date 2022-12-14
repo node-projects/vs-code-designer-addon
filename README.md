@@ -1,6 +1,11 @@
 # vs-code-designer-addon
 A VSCode Addon using the web-component-designer
 
+## references
+
+- based on https://github.com/node-projects/web-component-designer
+- sample using the designer: https://node-projects.github.io/web-component-designer-demo/index.html
+
 ## sample image
 
 ![sample](sample.gif)
