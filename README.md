@@ -13,5 +13,5 @@ A VSCode Addon using the web-component-designer
 - at the moment you also need to watch `npm run watchWebview`
 - `F5` to start debugging
 
-Run the `Designer ....` commad (Ctrl+Shift+P) to create the webview.
+Right Click HTML File and select open with, then choose designer
 

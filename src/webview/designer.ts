@@ -10,13 +10,17 @@ const url = new URL(import.meta.url);
 const path = url.pathname.replace("out/webview/designer.js", "");
 
 import { DomHelper } from '@node-projects/base-custom-webcomponent';
-import { DesignerView, IDesignItem, NodeHtmlParserService, } from '@node-projects/web-component-designer';
+import { DesignerView, IDesignItem, NodeHtmlParserService, PropertyGrid } from '@node-projects/web-component-designer';
 import createDefaultServiceContainer from '@node-projects/web-component-designer/dist/elements/services/DefaultServiceBootstrap.js';
 await window.customElements.whenDefined("node-projects-designer-view")
 const designerView = <DesignerView>document.querySelector("node-projects-designer-view");
+const propertyGrid = <PropertyGrid>document.getElementById("propertyGrid");
 let serviceContainer = createDefaultServiceContainer();
 serviceContainer.register("htmlParserService", new NodeHtmlParserService(path + '/node_modules/@node-projects/node-html-parser-esm/dist/index.js'));
 designerView.initialize(serviceContainer);
+propertyGrid.serviceContainer = serviceContainer;
+propertyGrid.instanceServiceContainer = designerView.instanceServiceContainer;
+
 
 function findDesignItem(designItem: IDesignItem, position: number): IDesignItem {
     let usedItem = null;

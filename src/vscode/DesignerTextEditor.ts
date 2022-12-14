@@ -139,64 +139,9 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 				importShim("${scriptUri}");
 			</script>
 
-			<node-projects-designer-view style="height: 100%; width: 100%;"></node-projects-designer-view>
+			<node-projects-designer-view style="height: 100%; width: calc(100% - 260px); position: absolute; top: 0; left: 0;"></node-projects-designer-view>
+			<node-projects-property-grid-with-header id="propertyGrid" style="height: 100%; width: 260px; position: absolute; top: 0; right: 0;"></node-projects-property-grid-with-header>
 		</body>
 		</html>`;
 	}
-
-	/*
-	private addNewScratch(document: vscode.TextDocument) {
-		const json = this.getDocumentAsJson(document);
-		const character = CatScratchEditorProvider.scratchCharacters[Math.floor(Math.random() * CatScratchEditorProvider.scratchCharacters.length)];
-		json.scratches = [
-			...(Array.isArray(json.scratches) ? json.scratches : []),
-			{
-				id: getNonce(),
-				text: character,
-				created: Date.now(),
-			}
-		];
-
-		return this.updateTextDocument(document, json);
-	}*/
-
-	/*
-	private deleteScratch(document: vscode.TextDocument, id: string) {
-		const json = this.getDocumentAsJson(document);
-		if (!Array.isArray(json.scratches)) {
-			return;
-		}
-
-		json.scratches = json.scratches.filter((note: any) => note.id !== id);
-
-		return this.updateTextDocument(document, json);
-	}*/
-
-	/*
-	private getDocumentAsJson(document: vscode.TextDocument): any {
-		const text = document.getText();
-		if (text.trim().length === 0) {
-			return {};
-		}
-
-		try {
-			return JSON.parse(text);
-		} catch {
-			throw new Error('Could not get document as json. Content is not valid json');
-		}
-	}*/
-
-	/*
-	private updateTextDocument(document: vscode.TextDocument, json: any) {
-		const edit = new vscode.WorkspaceEdit();
-
-		// Just replace the entire document every time for this example extension.
-		// A more complete extension should compute minimal edits instead.
-		edit.replace(
-			document.uri,
-			new vscode.Range(0, 0, document.lineCount, 0),
-			JSON.stringify(json, null, 2));
-
-		return vscode.workspace.applyEdit(edit);
-	}*/
 }

@@ -30,6 +30,12 @@
 					},
 					{
 						"filenamePattern": "*.vue"
+					},
+					{
+						"filenamePattern": "*.js"
+					},
+					{
+						"filenamePattern": "*.ts"
 					}
 				],
 				"priority": "option"
@@ -45,26 +51,29 @@
 		}
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
+		"vscode:prepublish": "npm run compile && npm run compileWebview",
+		"compile": "tsc -p ./src/vscode",
+		"compileWebview": "tsc -p ./src/webview",
 		"lint": "eslint \"src/**/*.ts\"",
 		"watch": "tsc -w -p ./src/vscode",
-		"watchWebview": "tsc -w -p ./src/webview"
+		"watchWebview": "tsc -w -p ./src/webview",
+		"vsce": "vsce package"
 	},
 	"devDependencies": {
-		"@types/node": "^18.11.14",
+		"@types/node": "^18.11.15",
 		"@types/vscode": "^1.74.0",
 		"@types/vscode-webview": "^1.57.0",
 		"@typescript-eslint/eslint-plugin": "^5.46.1",
 		"@typescript-eslint/parser": "^5.46.1",
 		"eslint": "^8.29.0",
-		"typescript": "^4.9.4"
+		"typescript": "^4.9.4",
+		"@vscode/vsce": "^2.15.0"
 	},
 	"dependencies": {
 		"@node-projects/base-custom-webcomponent": "^0.10.7",
 		"@node-projects/lean-he-esm": "^3.3.0",
 		"@node-projects/node-html-parser-esm": "^2.5.1",
-		"@node-projects/web-component-designer": "^0.0.161",
+		"@node-projects/web-component-designer": "^0.0.163",
 		"construct-style-sheets-polyfill": "^3.1.0",
 		"es-module-shims": "^1.6.2"
 	}
