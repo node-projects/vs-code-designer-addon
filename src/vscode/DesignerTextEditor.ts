@@ -123,8 +123,8 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 				importShim("${scriptUri}");
 			</script>
 
-			<node-projects-designer-view style="height: 100%; width: calc(100% - 260px); position: absolute; top: 0; left: 0;"></node-projects-designer-view>
-			<node-projects-property-grid-with-header id="propertyGrid" style="height: 100%; width: 260px; position: absolute; top: 0; right: 0;"></node-projects-property-grid-with-header>
+			<node-projects-designer-view style="color: initial; height: 100%; width: calc(100% - 260px); position: absolute; top: 0; left: 0;"></node-projects-designer-view>
+			<node-projects-property-grid-with-header id="propertyGrid" style="color: white; height: 100%; width: 260px; position: absolute; top: 0; right: 0;"></node-projects-property-grid-with-header>
 		</body>
 		</html>`;
 	}
