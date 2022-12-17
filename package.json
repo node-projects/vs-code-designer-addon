@@ -36,6 +36,9 @@
 					},
 					{
 						"filenamePattern": "*.ts"
+					},
+					{
+						"filenamePattern": "*.svelte"
 					}
 				],
 				"priority": "option"
