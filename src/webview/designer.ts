@@ -5,18 +5,24 @@ const workspaceuri = window['__$vscodeWorkspaceUri'];
 const url = new URL(import.meta.url);
 const path = url.pathname.replace("out/webview/designer.js", "");
 
+//TODO: vscode does not yet know CSSContainerRule
+if (!window.CSSContainerRule)
+    //@ts-ignore
+    window.CSSContainerRule = class { }
+
 import { DomHelper } from '@node-projects/base-custom-webcomponent';
-import { DesignerView, IDesignItem, NodeHtmlParserService, PropertyGrid } from '@node-projects/web-component-designer';
+import { CssToolsStylesheetService, DesignerView, IDesignItem, NodeHtmlParserService, PropertyGrid } from '@node-projects/web-component-designer';
 import createDefaultServiceContainer from '@node-projects/web-component-designer/dist/elements/services/DefaultServiceBootstrap.js';
+import { IStringPosition } from '@node-projects/web-component-designer/dist/elements/services/htmlWriterService/IStringPosition';
 await window.customElements.whenDefined("node-projects-designer-view")
 const designerView = <DesignerView>document.querySelector("node-projects-designer-view");
 const propertyGrid = <PropertyGrid>document.getElementById("propertyGrid");
 let serviceContainer = createDefaultServiceContainer();
 serviceContainer.register("htmlParserService", new NodeHtmlParserService(path + '/node_modules/@node-projects/node-html-parser-esm/dist/index.js'));
+serviceContainer.register("stylesheetService", designerCanvas => new CssToolsStylesheetService());
 designerView.initialize(serviceContainer);
 propertyGrid.serviceContainer = serviceContainer;
 propertyGrid.instanceServiceContainer = designerView.instanceServiceContainer;
-
 
 function findDesignItem(designItem: IDesignItem, position: number): IDesignItem {
     let usedItem = null;
@@ -62,11 +68,17 @@ async function parseHTML(html: string) {
     }
 }
 
-window.addEventListener('message', event => {
+let firstRun = true;
+window.addEventListener('message', async event => {
     const message = event.data;
     switch (message.type) {
         case 'update':
-            parseHTML(message.text)
+            await parseHTML(message.text)
+            if (firstRun) {
+                firstRun = false;
+                const code = designerView.getHTML();
+                vscode.postMessage({ type: 'updateDocument', code: code });
+            }
             break;
         case 'changeSelection':
             const pos = message.position;
@@ -77,6 +89,19 @@ window.addEventListener('message', event => {
     }
 });
 
+designerView.instanceServiceContainer.selectionService.onSelectionChanged.on(() => {
+    let primarySelection = designerView.instanceServiceContainer.selectionService.primarySelection;
+    if (primarySelection) {
+        let designItemsAssignmentList: Map<IDesignItem, IStringPosition> = new Map();
+        designerView.getHTML(designItemsAssignmentList);
+        const selectionPosition = designItemsAssignmentList.get(primarySelection);
+        vscode.postMessage({ type: 'setSelection', position: selectionPosition });
+    }
+});
+designerView.designerCanvas.onContentChanged.on(() =>{
+    const code = designerView.getHTML();
+    vscode.postMessage({ type: 'updateDocument', code: code });
+})
 
 
 vscode.postMessage({ type: 'requestUpdate' });

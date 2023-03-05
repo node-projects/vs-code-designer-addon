@@ -31,6 +31,9 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 		webviewPanel.webview.options = { enableScripts: true };
 		webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
 
+		let disableSelectionChange = false;
+		let disableUpdateWebview = false;
+
 		function updateWebview() {
 			webviewPanel.webview.postMessage({
 				type: 'update',
@@ -40,23 +43,36 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 
 		const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument(e => {
 			if (e.document.uri.toString() === document.uri.toString()) {
-				updateWebview();
+				if (!disableUpdateWebview) {
+					disableUpdateWebview = true;
+					updateWebview();
+					setTimeout(() => {
+						disableUpdateWebview = false;
+					}, 50);
+				}
+
 			}
 		});
 
-		const changeTextEditorSlection = vscode.window.onDidChangeTextEditorSelection(e => {
+		const changeTextEditorSelection = vscode.window.onDidChangeTextEditorSelection(e => {
 			if (e.textEditor.document.uri.toString() === document.uri.toString()) {
-				webviewPanel.webview.postMessage({
-					type: 'changeSelection',
-					position: e.textEditor.document.offsetAt(e.selections[0].start),
-				});
+				if (!disableSelectionChange) {
+					disableSelectionChange = true;
+					webviewPanel.webview.postMessage({
+						type: 'changeSelection',
+						position: e.textEditor.document.offsetAt(e.selections[0].start),
+					});
+					setTimeout(() => {
+						disableSelectionChange = false;
+					}, 100);
+				}
 			}
 		});
 
 		// Make sure we get rid of the listener when our editor is closed.
 		webviewPanel.onDidDispose(() => {
 			changeDocumentSubscription.dispose();
-			changeTextEditorSlection.dispose();
+			changeTextEditorSelection.dispose();
 		});
 
 		// Receive message from the webview.
@@ -64,6 +80,37 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 			switch (e.type) {
 				case 'requestUpdate':
 					updateWebview();
+					return;
+				case 'updateDocument': {
+					if (!disableUpdateWebview) {
+						disableUpdateWebview = true;
+						setTimeout(() => {
+							disableUpdateWebview = false;
+						}, 50);
+						const edit = new vscode.WorkspaceEdit();
+						edit.replace(
+							document.uri,
+							new vscode.Range(0, 0, document.lineCount, 0), e.code);
+						return vscode.workspace.applyEdit(edit);
+					}
+				}
+				case 'setSelection':
+					{
+
+						if (!disableSelectionChange) {
+							disableSelectionChange = true;
+							for (const editor of vscode.window.visibleTextEditors) {
+								if (editor.document == document) {
+									let point1 = editor.document.positionAt(e.position.start);
+									let point2 = editor.document.positionAt(e.position.start + e.position.length);
+									editor.selection = new vscode.Selection(point1, point2);
+								}
+							}
+							setTimeout(() => {
+								disableSelectionChange = false;
+							}, 100);
+						}
+					}
 					return;
 			}
 		});
@@ -112,6 +159,12 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 				  "@node-projects/web-component-designer/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer/'))}",
 				  "@node-projects/lean-he-esm": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/lean-he-esm/dist/index.js'))}",
 				  "@node-projects/lean-he-esm/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/lean-he-esm/'))}",
+				  "@adobe/css-tools/dist/esm/type": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@adobe/css-tools/dist/esm/type.js'))}",
+				  "@adobe/css-tools/dist/esm/CssParseError": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@adobe/css-tools/dist/esm/CssParseError.js'))}",
+				  "@adobe/css-tools/dist/esm/CssPosition": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@adobe/css-tools/dist/esm/CssPosition.js'))}",
+				  "@adobe/css-tools/dist/esm/parse": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@adobe/css-tools/dist/esm/parse/index.js'))}",
+				  "@adobe/css-tools": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@adobe/css-tools/dist/esm/index.js'))}",
+				  "@adobe/css-tools/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@adobe/css-tools/dist/esm/'))}",
 				}
 			  };
 			  //@ts-ignore

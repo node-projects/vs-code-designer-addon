@@ -11,5 +11,9 @@ export function activate(context: vscode.ExtensionContext) {
 		canSelectMany: true
 	});
 
+	//context.subscriptions.push(
+	//	vscode.window.registerWebviewViewProvider(ColorsViewProvider.viewType, provider));
+
+
 	context.subscriptions.push(DesignerTextEditor.register(context));
 }
