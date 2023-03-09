@@ -159,12 +159,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 				  "@node-projects/web-component-designer/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer/'))}",
 				  "@node-projects/lean-he-esm": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/lean-he-esm/dist/index.js'))}",
 				  "@node-projects/lean-he-esm/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/lean-he-esm/'))}",
-				  "@adobe/css-tools/dist/esm/type": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@adobe/css-tools/dist/esm/type.js'))}",
-				  "@adobe/css-tools/dist/esm/CssParseError": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@adobe/css-tools/dist/esm/CssParseError.js'))}",
-				  "@adobe/css-tools/dist/esm/CssPosition": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@adobe/css-tools/dist/esm/CssPosition.js'))}",
-				  "@adobe/css-tools/dist/esm/parse": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@adobe/css-tools/dist/esm/parse/index.js'))}",
-				  "@adobe/css-tools": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@adobe/css-tools/dist/esm/index.js'))}",
-				  "@adobe/css-tools/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@adobe/css-tools/dist/esm/'))}",
+				  "@adobe/css-tools": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@adobe/css-tools/dist/index.mjs'))}"
 				}
 			  };
 			  //@ts-ignore

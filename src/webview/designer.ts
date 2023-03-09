@@ -19,7 +19,7 @@ const designerView = <DesignerView>document.querySelector("node-projects-designe
 const propertyGrid = <PropertyGrid>document.getElementById("propertyGrid");
 let serviceContainer = createDefaultServiceContainer();
 serviceContainer.register("htmlParserService", new NodeHtmlParserService(path + '/node_modules/@node-projects/node-html-parser-esm/dist/index.js'));
-serviceContainer.register("stylesheetService", designerCanvas => new CssToolsStylesheetService());
+serviceContainer.register("stylesheetService", designerCanvas => new CssToolsStylesheetService(designerCanvas));
 designerView.initialize(serviceContainer);
 propertyGrid.serviceContainer = serviceContainer;
 propertyGrid.instanceServiceContainer = designerView.instanceServiceContainer;
