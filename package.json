@@ -43,15 +43,7 @@
 				],
 				"priority": "option"
 			}
-		],
-		"views": {
-			"explorer": [
-				{
-					"id": "designerTreeView",
-					"name": "designer-tree"
-				}
-			]
-		}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile && npm run compileWebview",
@@ -73,12 +65,6 @@
 		"typescript": "^4.9.5"
 	},
 	"dependencies": {
-		"@adobe/css-tools": "^4.3.0-beta.1",
-		"@node-projects/base-custom-webcomponent": "^0.10.9",
-		"@node-projects/lean-he-esm": "^3.3.0",
-		"@node-projects/node-html-parser-esm": "^2.5.1",
-		"@node-projects/web-component-designer": "^0.0.214",
-		"construct-style-sheets-polyfill": "^3.1.0",
-		"es-module-shims": "^1.7.0"
+		"@adobe/css-tools": "^4.3.0-beta.1"
 	}
 }
