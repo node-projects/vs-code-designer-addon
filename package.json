@@ -64,7 +64,7 @@
 	},
 	"devDependencies": {
 		"@types/node": "^18.15.0",
-		"@types/vscode": "^1.76.0",
+		"@types/vscode": "^1.74.0",
 		"@types/vscode-webview": "^1.57.1",
 		"@typescript-eslint/eslint-plugin": "^5.54.1",
 		"@typescript-eslint/parser": "^5.54.1",
@@ -76,8 +76,8 @@
 		"@adobe/css-tools": "^4.3.0-beta.1",
 		"@node-projects/base-custom-webcomponent": "^0.10.9",
 		"@node-projects/lean-he-esm": "^3.3.0",
-		"@node-projects/node-html-parser-esm": "^2.5.1",
-		"@node-projects/web-component-designer": "^0.0.214",
+		"@node-projects/node-html-parser-esm": "^6.1.5",
+		"@node-projects/web-component-designer": "^0.0.216",
 		"construct-style-sheets-polyfill": "^3.1.0",
 		"es-module-shims": "^1.7.0"
 	}

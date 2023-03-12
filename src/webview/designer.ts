@@ -74,11 +74,6 @@ window.addEventListener('message', async event => {
     switch (message.type) {
         case 'update':
             await parseHTML(message.text)
-            if (firstRun) {
-                firstRun = false;
-                const code = designerView.getHTML();
-                vscode.postMessage({ type: 'updateDocument', code: code });
-            }
             break;
         case 'changeSelection':
             const pos = message.position;
@@ -92,9 +87,7 @@ window.addEventListener('message', async event => {
 designerView.instanceServiceContainer.selectionService.onSelectionChanged.on(() => {
     let primarySelection = designerView.instanceServiceContainer.selectionService.primarySelection;
     if (primarySelection) {
-        let designItemsAssignmentList: Map<IDesignItem, IStringPosition> = new Map();
-        designerView.getHTML(designItemsAssignmentList);
-        const selectionPosition = designItemsAssignmentList.get(primarySelection);
+        const selectionPosition = designerView.instanceServiceContainer.designItemDocumentPositionService.getPosition(primarySelection);
         vscode.postMessage({ type: 'setSelection', position: selectionPosition });
     }
 });
@@ -102,6 +95,5 @@ designerView.designerCanvas.onContentChanged.on(() =>{
     const code = designerView.getHTML();
     vscode.postMessage({ type: 'updateDocument', code: code });
 })
-
 
 vscode.postMessage({ type: 'requestUpdate' });
