@@ -28,8 +28,9 @@ function findDesignItem(designItem: IDesignItem, position: number): IDesignItem 
     let usedItem = null;
     if (designItem.hasChildren) {
         for (let d of designItem.children()) {
-            if (d.parsedNode && d.parsedNode.position) {
-                if (d.parsedNode.position.start <= position)
+            const nodePosition = designerView.instanceServiceContainer.designItemDocumentPositionService.getPosition(d);
+            if (nodePosition) {
+                if (nodePosition.start <= position)
                     usedItem = d;
             }
         }
@@ -61,19 +62,21 @@ async function parseHTML(html: string) {
         designerView.designerCanvas.rootDesignItem.clearChildren();
     }
     else {
-        const designItems = await parserService.parse(html, designerView.serviceContainer, designerView.instanceServiceContainer);
+        const designItems = await parserService.parse(html, designerView.serviceContainer, designerView.instanceServiceContainer, false);
         for (let d of designItems)
             fixDesignItemsPaths(d)
         designerView.designerCanvas.setDesignItems(designItems)
     }
 }
 
-let firstRun = true;
+let parsing = true;
 window.addEventListener('message', async event => {
     const message = event.data;
     switch (message.type) {
         case 'update':
-            await parseHTML(message.text)
+            parsing = true;
+            await parseHTML(message.text);
+            parsing = false;
             break;
         case 'changeSelection':
             const pos = message.position;
@@ -91,9 +94,11 @@ designerView.instanceServiceContainer.selectionService.onSelectionChanged.on(() 
         vscode.postMessage({ type: 'setSelection', position: selectionPosition });
     }
 });
-designerView.designerCanvas.onContentChanged.on(() =>{
-    const code = designerView.getHTML();
-    vscode.postMessage({ type: 'updateDocument', code: code });
+designerView.designerCanvas.onContentChanged.on(() => {
+    if (!parsing) {
+        const code = designerView.getHTML();
+        vscode.postMessage({ type: 'updateDocument', code: code });
+    }
 })
 
 vscode.postMessage({ type: 'requestUpdate' });
