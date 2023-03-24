@@ -7,3 +7,4 @@ node_modules/**
 !node_modules/@node-projects/
 !node_modules/construct-style-sheets-polyfill/
 !node_modules/es-module-shims/
+!node_modules/typescript/
