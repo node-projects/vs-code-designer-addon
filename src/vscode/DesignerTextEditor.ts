@@ -38,6 +38,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 			webviewPanel.webview.postMessage({
 				type: 'update',
 				text: document.getText(),
+				filename: document.fileName
 			});
 		}
 
@@ -140,6 +141,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
 			<!--<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">-->
 
+			<script nonce="${nonce}" src="${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/typescript/lib/typescript.js'))}"></script>
 			<script nonce="${nonce}" src="${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/construct-style-sheets-polyfill/dist/adoptedStyleSheets.js'))}"></script>
 			<script nonce="${nonce}" type="esms-options">
 			  {

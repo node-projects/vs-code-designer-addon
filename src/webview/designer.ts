@@ -13,12 +13,14 @@ if (!window.CSSContainerRule)
 import { DomHelper } from '@node-projects/base-custom-webcomponent';
 import { CssToolsStylesheetService, DesignerView, IDesignItem, NodeHtmlParserService, PropertyGrid } from '@node-projects/web-component-designer';
 import createDefaultServiceContainer from '@node-projects/web-component-designer/dist/elements/services/DefaultServiceBootstrap.js';
-import { IStringPosition } from '@node-projects/web-component-designer/dist/elements/services/htmlWriterService/IStringPosition';
+import { DesignerHtmlParserService } from './DesignerHtmlParserService.js';
+
 await window.customElements.whenDefined("node-projects-designer-view")
 const designerView = <DesignerView>document.querySelector("node-projects-designer-view");
 const propertyGrid = <PropertyGrid>document.getElementById("propertyGrid");
 let serviceContainer = createDefaultServiceContainer();
-serviceContainer.register("htmlParserService", new NodeHtmlParserService(path + '/node_modules/@node-projects/node-html-parser-esm/dist/index.js'));
+let designerHtmlParserService = new DesignerHtmlParserService(path);
+serviceContainer.register("htmlParserService", designerHtmlParserService);
 serviceContainer.register("stylesheetService", designerCanvas => new CssToolsStylesheetService(designerCanvas));
 designerView.initialize(serviceContainer);
 propertyGrid.serviceContainer = serviceContainer;
@@ -75,6 +77,8 @@ window.addEventListener('message', async event => {
     switch (message.type) {
         case 'update':
             parsing = true;
+            debugger;
+            designerHtmlParserService.filename = message.filename;
             await parseHTML(message.text);
             parsing = false;
             break;

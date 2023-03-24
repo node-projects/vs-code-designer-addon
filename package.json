@@ -2,7 +2,7 @@
 	"name": "vscode-designer-addon",
 	"displayName": "HTML Wysiwyg (What you see is what you get) Designer Addon",
 	"description": "A Graphical HTML Designer",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"publisher": "node-projects",
 	"license": "MIT",
 	"repository": {
@@ -58,22 +58,22 @@
 		"publish": "vsce publish"
 	},
 	"devDependencies": {
-		"@types/node": "^18.15.6",
+		"@types/node": "^18.15.7",
 		"@types/vscode": "^1.74.0",
 		"@types/vscode-webview": "^1.57.1",
 		"@typescript-eslint/eslint-plugin": "^5.56.0",
 		"@typescript-eslint/parser": "^5.56.0",
 		"@vscode/vsce": "^2.18.0",
-		"eslint": "^8.36.0",
-		"typescript": "^5.0.2"
+		"eslint": "^8.36.0"
 	},
 	"dependencies": {
 		"@adobe/css-tools": "4.3.0-beta.1",
 		"@node-projects/base-custom-webcomponent": "^0.10.9",
 		"@node-projects/lean-he-esm": "^3.3.0",
 		"@node-projects/node-html-parser-esm": "^6.1.5",
-		"@node-projects/web-component-designer": "^0.0.218",
+		"@node-projects/web-component-designer": "^0.0.219",
 		"construct-style-sheets-polyfill": "^3.1.0",
-		"es-module-shims": "^1.7.0"
+		"es-module-shims": "^1.7.0",
+		"typescript": "^5.0.2"
 	}
 }
