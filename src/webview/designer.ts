@@ -13,13 +13,13 @@ if (!window.CSSContainerRule)
 import { DomHelper } from '@node-projects/base-custom-webcomponent';
 import { CssToolsStylesheetService, DesignerView, IDesignItem, NodeHtmlParserService, PropertyGrid } from '@node-projects/web-component-designer';
 import createDefaultServiceContainer from '@node-projects/web-component-designer/dist/elements/services/DefaultServiceBootstrap.js';
-import { DesignerHtmlParserService } from './DesignerHtmlParserService.js';
+import { DesignerHtmlParserAndWriterService } from './DesignerHtmlParserAndWriterService.js';
 
 await window.customElements.whenDefined("node-projects-designer-view")
 const designerView = <DesignerView>document.querySelector("node-projects-designer-view");
 const propertyGrid = <PropertyGrid>document.getElementById("propertyGrid");
 let serviceContainer = createDefaultServiceContainer();
-let designerHtmlParserService = new DesignerHtmlParserService(path);
+let designerHtmlParserService = new DesignerHtmlParserAndWriterService(path);
 serviceContainer.register("htmlParserService", designerHtmlParserService);
 serviceContainer.register("stylesheetService", designerCanvas => new CssToolsStylesheetService(designerCanvas));
 designerView.initialize(serviceContainer);
@@ -97,9 +97,18 @@ designerView.instanceServiceContainer.selectionService.onSelectionChanged.on(() 
         vscode.postMessage({ type: 'setSelection', position: selectionPosition });
     }
 });
+/*designerView.instanceServiceContainer.stylesheetService.stylesheetChanged.on((event) => {
+    console.log(event);
+});*/
 designerView.designerCanvas.onContentChanged.on(() => {
     if (!parsing) {
-        const code = designerView.getHTML();
+        let code = designerView.getHTML();
+        let st = designerView.instanceServiceContainer.stylesheetService.getStylesheets()?.find(x => x.name == 'css');
+        let css = '';
+        if (st) {
+            css = st.content;
+        }
+        code = designerHtmlParserService.write(code, css);
         vscode.postMessage({ type: 'updateDocument', code: code });
     }
 })
