@@ -8,23 +8,12 @@ export class DesignerTreeView implements vscode.TreeDataProvider<TreeItem>, vsco
 	data: TreeItem[];
 
 	constructor() {
-		this.data = [new TreeItem('cars', [
-			new TreeItem(
-				'Ford', [new TreeItem('Fiesta'), new TreeItem('Focus'), new TreeItem('Mustang')]),
-			new TreeItem(
-				'BMW', [new TreeItem('320'), new TreeItem('X3'), new TreeItem('X5')])
-		])];
+		this.data = [new TreeItem('work progress')];
 
 		const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument(e => {
-			//debugger;
 		});
 
 		const changeActiveTextEditorSubscription  = vscode.window.onDidChangeActiveTextEditor(e => {
-			if (e instanceof DesignerTextEditor) {
-				console.log('aa');
-				//debugger;
-			}
-			//debugger;
 		});
 	}
 

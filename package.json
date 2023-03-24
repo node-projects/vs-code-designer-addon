@@ -44,15 +44,7 @@
 				],
 				"priority": "option"
 			}
-		],
-		"views": {
-			"explorer": [
-				{
-					"id": "designerTreeView",
-					"name": "designer-tree"
-				}
-			]
-		}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile && npm run compileWebview",
