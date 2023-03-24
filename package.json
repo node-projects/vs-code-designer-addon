@@ -53,7 +53,9 @@
 		"lint": "eslint \"src/**/*.ts\"",
 		"watch": "tsc -w -p ./src/vscode",
 		"watchWebview": "tsc -w -p ./src/webview",
-		"vsce": "vsce package"
+		"vsce": "vsce",
+		"package": "vsce package",
+		"publish": "vsce publish"
 	},
 	"devDependencies": {
 		"@types/node": "^18.15.6",
