@@ -77,7 +77,6 @@ window.addEventListener('message', async event => {
     switch (message.type) {
         case 'update':
             parsing = true;
-            debugger;
             designerHtmlParserService.filename = message.filename;
             await parseHTML(message.text);
             parsing = false;
