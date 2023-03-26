@@ -174,7 +174,8 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 			</script>
 
 			<node-projects-designer-view style="color: initial; height: 100%; width: calc(100% - 260px); position: absolute; top: 0; left: 0;"></node-projects-designer-view>
-			<node-projects-property-grid-with-header id="propertyGrid" style="color: white; height: 100%; width: 260px; position: absolute; top: 0; right: 0;"></node-projects-property-grid-with-header>
+			<node-projects-property-grid-with-header id="propertyGrid" style="color: white; height: 80%; width: 260px; position: absolute; top: 0; right: 0;"></node-projects-property-grid-with-header>
+			<node-projects-palette-view id="paletteView" style="color: white; height: 20%; width: 260px; position: absolute; bottom: 0; right: 0;"></node-projects-palette-view>
 		</body>
 		</html>`;
 	}

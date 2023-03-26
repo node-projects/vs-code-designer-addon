@@ -11,20 +11,26 @@ if (!window.CSSContainerRule)
     window.CSSContainerRule = class { }
 
 import { DomHelper } from '@node-projects/base-custom-webcomponent';
-import { CssToolsStylesheetService, DesignerView, IDesignItem, NodeHtmlParserService, PropertyGrid } from '@node-projects/web-component-designer';
+import { CssToolsStylesheetService, DesignerView, IDesignItem, NodeHtmlParserService, PaletteView, PreDefinedElementsService, PropertyGrid } from '@node-projects/web-component-designer';
 import createDefaultServiceContainer from '@node-projects/web-component-designer/dist/elements/services/DefaultServiceBootstrap.js';
 import { DesignerHtmlParserAndWriterService } from './DesignerHtmlParserAndWriterService.js';
 
-await window.customElements.whenDefined("node-projects-designer-view")
+await window.customElements.whenDefined("node-projects-designer-view");
 const designerView = <DesignerView>document.querySelector("node-projects-designer-view");
 const propertyGrid = <PropertyGrid>document.getElementById("propertyGrid");
+const paletteView = <PaletteView>document.getElementById("paletteView");
 let serviceContainer = createDefaultServiceContainer();
 let designerHtmlParserService = new DesignerHtmlParserAndWriterService(path);
 serviceContainer.register("htmlParserService", designerHtmlParserService);
 serviceContainer.register("stylesheetService", designerCanvas => new CssToolsStylesheetService(designerCanvas));
+//@ts-ignore
+let json = await import('@node-projects/web-component-designer/config/elements-native.json', { assert: { type: 'json' } })
+serviceContainer.register('elementsService', new PreDefinedElementsService('native', json.default));
+
 designerView.initialize(serviceContainer);
 propertyGrid.serviceContainer = serviceContainer;
 propertyGrid.instanceServiceContainer = designerView.instanceServiceContainer;
+paletteView.loadControls(serviceContainer, serviceContainer.elementsServices);
 
 function findDesignItem(designItem: IDesignItem, position: number): IDesignItem {
     let usedItem = null;
