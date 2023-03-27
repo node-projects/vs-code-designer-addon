@@ -39,6 +39,9 @@
 						"filenamePattern": "*.ts"
 					},
 					{
+						"filenamePattern": "*.tsx"
+					},
+					{
 						"filenamePattern": "*.svelte"
 					}
 				],

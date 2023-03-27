@@ -15,7 +15,8 @@ A VSCode Addon using the web-component-designer
 - html files
 - https://github.com/node-projects/base-custom-webcomponent Components, with css in static style varibale and html in static template variable.
 - https://polymer-library.polymer-project.org/ Components.
-- https://vuejs.org/ Components with templates in 'template' tags .
+- https://vuejs.org/ Components with templates in 'template' tags.
+- https://svelte.dev/ Components.
 
 ## sample image
 
