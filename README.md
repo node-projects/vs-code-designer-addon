@@ -5,6 +5,10 @@
 # vs-code-designer-addon
 A VSCode Addon using the web-component-designer
 
+## addon-page
+
+https://marketplace.visualstudio.com/items?itemName=node-projects.vscode-designer-addon
+
 ## references
 
 - based on https://github.com/node-projects/web-component-designer
