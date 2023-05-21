@@ -25,7 +25,9 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 
 	constructor(
 		private readonly context: vscode.ExtensionContext
-	) { }
+	) {
+		//debugger;
+	 }
 
 	public async resolveCustomTextEditor(document: vscode.TextDocument, webviewPanel: vscode.WebviewPanel, _token: vscode.CancellationToken): Promise<void> {
 		webviewPanel.webview.options = { enableScripts: true };

@@ -9,7 +9,19 @@ export class DesignerTreeView implements vscode.TreeDataProvider<TreeItem>, vsco
 
 	constructor() {
 		this.data = [new TreeItem('work progress')];
+		
+		/*const tg1 =vscode.window.tabGroups.onDidChangeTabGroups(e => {
+			if (e.changed[0].activeTab?.input.viewType == "designer.designerTextEditor") {
 
+			}
+			debugger;
+			console.log('tg', e);
+		});
+		const tg2 =vscode.window.tabGroups.onDidChangeTabs(e => {
+			debugger;
+			console.log('t', e);
+		});*/
+		
 		const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument(e => {
 		});
 
