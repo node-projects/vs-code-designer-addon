@@ -2,7 +2,7 @@
 	"name": "vscode-designer-addon",
 	"displayName": "HTML Wysiwyg (What you see is what you get) Designer Addon",
 	"description": "A Graphical HTML Designer",
-	"version": "1.0.8",
+	"version": "1.0.9",
 	"publisher": "node-projects",
 	"license": "MIT",
 	"repository": {
@@ -64,22 +64,21 @@
 		"publish": "vsce publish"
 	},
 	"devDependencies": {
-		"@types/node": "^20.2.1",
+		"@types/node": "^20.4.5",
 		"@types/vscode": "^1.74.0",
 		"@types/vscode-webview": "^1.57.1",
-		"@typescript-eslint/eslint-plugin": "^5.59.6",
-		"@typescript-eslint/parser": "^5.59.6",
-		"@vscode/vsce": "^2.19.0",
-		"eslint": "^8.41.0"
+		"@typescript-eslint/eslint-plugin": "^6.2.0",
+		"@typescript-eslint/parser": "^6.2.0",
+		"@vscode/vsce": "^2.20.0",
+		"eslint": "^8.46.0"
 	},
 	"dependencies": {
-		"@adobe/css-tools": "4.3.0-beta.1",
-		"@node-projects/base-custom-webcomponent": "^0.10.9",
+		"@adobe/css-tools": "4.3.0-rc.1",
+		"@node-projects/base-custom-webcomponent": "^0.13.0",
 		"@node-projects/lean-he-esm": "^3.3.0",
 		"@node-projects/node-html-parser-esm": "^6.1.5",
-		"@node-projects/web-component-designer": "^0.0.232",
-		"construct-style-sheets-polyfill": "^3.1.0",
-		"es-module-shims": "^1.7.2",
-		"typescript": "^5.0.4"
+		"@node-projects/web-component-designer": "^0.0.244",
+		"es-module-shims": "^1.8.0",
+		"typescript": "^5.1.6"
 	}
 }
