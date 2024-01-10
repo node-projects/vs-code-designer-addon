@@ -11,9 +11,10 @@ if (!window.CSSContainerRule)
     window.CSSContainerRule = class { }
 
 import { DomHelper } from '@node-projects/base-custom-webcomponent';
-import { CssToolsStylesheetService, DesignerView, IDesignItem, NodeHtmlParserService, PaletteView, PreDefinedElementsService, PropertyGrid } from '@node-projects/web-component-designer';
+import { DesignerView, IDesignItem, PaletteView, PreDefinedElementsService, PropertyGrid } from '@node-projects/web-component-designer';
 import createDefaultServiceContainer from '@node-projects/web-component-designer/dist/elements/services/DefaultServiceBootstrap.js';
 import { DesignerHtmlParserAndWriterService } from './DesignerHtmlParserAndWriterService.js';
+import { CssToolsStylesheetService } from '@node-projects/web-component-designer-stylesheetservice-css-tools';
 
 await window.customElements.whenDefined("node-projects-designer-view");
 const designerView = <DesignerView>document.querySelector("node-projects-designer-view");

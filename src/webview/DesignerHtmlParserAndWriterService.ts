@@ -1,4 +1,6 @@
-import { BaseCustomWebcomponentParserService, IDesignItem, IHtmlParserService, InstanceServiceContainer, NodeHtmlParserService, ServiceContainer } from "@node-projects/web-component-designer";
+import { IDesignItem, IHtmlParserService, InstanceServiceContainer, ServiceContainer } from "@node-projects/web-component-designer";
+import { BaseCustomWebcomponentParserService } from "@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent";
+import { NodeHtmlParserService } from "@node-projects/web-component-designer-htmlparserservice-nodehtmlparser";
 
 export class DesignerHtmlParserAndWriterService implements IHtmlParserService {
 
@@ -9,7 +11,7 @@ export class DesignerHtmlParserAndWriterService implements IHtmlParserService {
 	public originalContent: string = '';
 
 	constructor(path: string) {
-		this.nodeHtmlParserService = new NodeHtmlParserService(path + '/node_modules/@node-projects/node-html-parser-esm/dist/index.js');
+		this.nodeHtmlParserService = new NodeHtmlParserService();
 		this.baseCustomWebcomponentParserService = new BaseCustomWebcomponentParserService(this.nodeHtmlParserService);
 	}
 

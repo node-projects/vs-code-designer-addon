@@ -144,7 +144,6 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 			<!--<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">-->
 
 			<script nonce="${nonce}" src="${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/typescript/lib/typescript.js'))}"></script>
-			<script nonce="${nonce}" src="${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/construct-style-sheets-polyfill/dist/adoptedStyleSheets.js'))}"></script>
 			<script nonce="${nonce}" type="esms-options">
 			  {
 				"shimMode": true
@@ -161,9 +160,18 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 				  "@node-projects/base-custom-webcomponent/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/base-custom-webcomponent/'))}",
 				  "@node-projects/web-component-designer": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer/dist/index.js'))}",
 				  "@node-projects/web-component-designer/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer/'))}",
+				  "@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent/dist/service/htmlParserService/BaseCustomWebcomponentParserService.js'))}",
+				  "@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent/'))}",
+				  "@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer-htmlparserservice-nodehtmlparser/dist/service/htmlParserService/NodeHtmlParserService.js'))}",
+				  "@node-projects/web-component-designer-htmlparserservice-nodehtmlparser/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer-htmlparserservice-nodehtmlparser/'))}",
+				  "@node-projects/web-component-designer-stylesheetservice-css-tools": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer-stylesheetservice-css-tools/dist/service/stylesheetservice/CssToolsStylesheetService.js'))}",
+				  "@node-projects/web-component-designer-stylesheetservice-css-tools/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer-stylesheetservice-css-tools/'))}",
 				  "@node-projects/lean-he-esm": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/lean-he-esm/dist/index.js'))}",
 				  "@node-projects/lean-he-esm/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/lean-he-esm/'))}",
-				  "@adobe/css-tools": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@adobe/css-tools/dist/index.mjs'))}"
+				  "@node-projects/node-html-parser-esm": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/node-html-parser-esm/dist/index.js'))}",
+				  "@node-projects/node-html-parser-esm/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/node-html-parser-esm/'))}",
+				  "@adobe/css-tools": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@adobe/css-tools/dist/index.mjs'))}",
+				  "typescript": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/typescript/lib/typescript.js'))}"
 				}
 			  };
 			  //@ts-ignore

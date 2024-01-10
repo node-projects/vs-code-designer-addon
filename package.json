@@ -64,21 +64,24 @@
 		"publish": "vsce publish"
 	},
 	"devDependencies": {
-		"@types/node": "^20.4.5",
-		"@types/vscode": "^1.74.0",
-		"@types/vscode-webview": "^1.57.1",
-		"@typescript-eslint/eslint-plugin": "^6.2.0",
-		"@typescript-eslint/parser": "^6.2.0",
-		"@vscode/vsce": "^2.20.0",
-		"eslint": "^8.46.0"
+		"@types/node": "^20.10.8",
+		"@types/vscode": "^1.85.0",
+		"@types/vscode-webview": "^1.57.4",
+		"@typescript-eslint/eslint-plugin": "^6.18.1",
+		"@typescript-eslint/parser": "^6.18.1",
+		"@vscode/vsce": "^2.22.0",
+		"eslint": "^8.56.0"
 	},
 	"dependencies": {
-		"@adobe/css-tools": "4.3.0-rc.1",
-		"@node-projects/base-custom-webcomponent": "^0.13.0",
+		"@adobe/css-tools": "4.3.2",
+		"@node-projects/base-custom-webcomponent": "^0.21.7",
 		"@node-projects/lean-he-esm": "^3.3.0",
-		"@node-projects/node-html-parser-esm": "^6.1.5",
-		"@node-projects/web-component-designer": "^0.0.244",
-		"es-module-shims": "^1.8.0",
-		"typescript": "^5.1.6"
+		"@node-projects/node-html-parser-esm": "^6.2.0",
+		"@node-projects/web-component-designer": "^0.1.48",
+		"@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent": "^0.1.3",
+		"@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "^0.1.4",
+		"@node-projects/web-component-designer-stylesheetservice-css-tools": "^0.1.3",
+		"es-module-shims": "^1.8.2",
+		"typescript": "^5.3.3"
 	}
 }
