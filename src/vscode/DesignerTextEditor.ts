@@ -37,6 +37,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 		let disableUpdateWebview = false;
 
 		function updateWebview() {
+			//debugger;
 			webviewPanel.webview.postMessage({
 				type: 'update',
 				text: document.getText(),
@@ -153,6 +154,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 			  window['__$vscodeWorkspaceUri'] = '${workspaceUri}'
 			</script>
 			<script nonce="${nonce}" src="${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/es-module-shims/dist/es-module-shims.js'))}"></script>
+			<script nonce="${nonce}" src="${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/typescript/lib/typescript.js'))}"></script>
 			<script nonce="${nonce}">
 			  const importMap = {
 				imports: {
@@ -170,8 +172,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 				  "@node-projects/lean-he-esm/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/lean-he-esm/'))}",
 				  "@node-projects/node-html-parser-esm": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/node-html-parser-esm/dist/index.js'))}",
 				  "@node-projects/node-html-parser-esm/": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/node-html-parser-esm/'))}",
-				  "@adobe/css-tools": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@adobe/css-tools/dist/index.mjs'))}",
-				  "typescript": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/typescript/lib/typescript.js'))}"
+				  "@adobe/css-tools": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@adobe/css-tools/dist/index.mjs'))}"
 				}
 			  };
 			  //@ts-ignore
