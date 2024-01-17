@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://web.resource.org/cc/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:svg="http://www.w3.org/2000/svg" id="svg2" viewBox="0 0 313 313" version="1.0">
+  <defs id="defs4">
+    <linearGradient id="linearGradient3477">
+      <stop id="stop3479" stop-color="#fff" offset="0"/>
+      <stop id="stop3483" stop-color="#ff0e0e" offset=".4846"/>
+      <stop id="stop3481" stop-color="#850000" offset="1"/>
+    </linearGradient>
+    <radialGradient id="radialGradient3144" gradientUnits="userSpaceOnUse" cy="633.94" cx="317.34" gradientTransform="matrix(1.7192 -.27854 .23847 1.4718 -502.65 -249.53)" r="287.14">
+      <stop id="stop3140" stop-color="#f00" offset="0"/>
+      <stop id="stop3142" stop-color="#a50000" offset="1"/>
+    </radialGradient>
+    <radialGradient id="radialGradient3329" gradientUnits="userSpaceOnUse" cy="603.3" cx="359.86" gradientTransform="matrix(1.9874 -.32079 .19084 1.1823 -486.21 -22.476)" r="287.14">
+      <stop id="stop3321" stop-color="#fff" offset="0"/>
+      <stop id="stop3323" stop-color="#fff" stop-opacity="0" offset="1"/>
+    </radialGradient>
+    <filter id="filter3462" y="-.10676" width="1.2135" height="1.2135" x="-.10676">
+      <feGaussianBlur id="feGaussianBlur3464" stdDeviation="25.545813"/>
+    </filter>
+    <radialGradient id="radialGradient3475" xlink:href="#linearGradient3477" gradientUnits="userSpaceOnUse" cy="788.8" cx="596.63" r="289.32"/>
+    <radialGradient id="radialGradient3491" xlink:href="#linearGradient3477" gradientUnits="userSpaceOnUse" cy="332.6" cx="272.22" r="287.14"/>
+    <filter id="filter3493">
+      <feGaussianBlur id="feGaussianBlur3495" stdDeviation="7.2323951"/>
+    </filter>
+    <radialGradient id="radialGradient3515" gradientUnits="userSpaceOnUse" cy="869.06" cx="500.23" gradientTransform="matrix(2.1042 -1.4029 .46183 .69270 -953.73 918.91)" r="217.18">
+      <stop id="stop3503" offset="0"/>
+      <stop id="stop3505" stop-opacity="0" offset="1"/>
+    </radialGradient>
+    <filter id="filter3569" y="-.11952" width="1.1565" height="1.239" x="-.078253">
+      <feGaussianBlur id="feGaussianBlur3571" stdDeviation="14.162876"/>
+    </filter>
+    <clipPath id="clipPath3225" clipPathUnits="userSpaceOnUse">
+      <path id="path3227" d="m294.32 487.12h179.06c9.57 0 17.27 7.71 17.27 17.27v30.28c0 9.57-7.7 17.27-17.27 17.27h-179.06c-9.57 0-17.27-7.7-17.27-17.27v-30.28c0-9.56 7.7-17.27 17.27-17.27z" fill="#fff"/>
+    </clipPath>
+    <filter id="filter3325" y="-.33009" width="1.2003" height="1.6602" x="-.10017">
+      <feGaussianBlur id="feGaussianBlur3327" stdDeviation="8.9146453"/>
+    </filter>
+  </defs>
+  <g id="layer5" transform="translate(-230.01 -366.5)">
+    <path id="path3332" filter="url(#filter3462)" d="m700 579.51a287.14 287.14 0 1 1 -574.29 0 287.14 287.14 0 1 1 574.29 0z" transform="matrix(.47133 0 0 .47133 194.44 254.88)"/>
+  </g>
+  <g id="layer1" stroke-linejoin="round" stroke-linecap="round" transform="translate(-230.01 -366.5)">
+    <path id="path2160" d="m700 579.51a287.14 287.14 0 1 1 -574.29 0 287.14 287.14 0 1 1 574.29 0z" transform="matrix(.47133 0 0 .47133 189.26 246.39)" stroke="url(#radialGradient3491)" stroke-width="5" fill="url(#radialGradient3144)"/>
+    <path id="path3136" d="m700 579.51a287.14 287.14 0 1 1 -574.29 0 287.14 287.14 0 1 1 574.29 0z" transform="matrix(.43285 0 0 .43285 205.14 268.69)" stroke="url(#radialGradient3475)" stroke-width="5.4444" fill="none"/>
+  </g>
+  <g id="layer3" transform="translate(-230.01 -366.5)">
+    <path id="path3156" d="m294.32 487.12h179.06c9.57 0 17.27 7.71 17.27 17.27v30.28c0 9.57-7.7 17.27-17.27 17.27h-179.06c-9.57 0-17.27-7.7-17.27-17.27v-30.28c0-9.56 7.7-17.27 17.27-17.27z" fill="#fff"/>
+  </g>
+  <g id="layer2" transform="translate(-230.01 -366.5)">
+    <path id="rect3195" opacity=".63054" d="m216.99 352.68v333.71h333.71v-333.71h-333.71zm83.92 140.49h165.89c9.93 0 17.92 0.71 17.92 10.64v31.44c0 9.93-7.99 10.64-17.92 10.64h-165.89c-9.93 0-17.94-0.71-17.94-10.64v-31.44c0-9.93 8.01-10.64 17.94-10.64z" clip-path="url(#clipPath3225)" filter="url(#filter3325)" fill="#5d90d6"/>
+  </g>
+  <g id="layer4" transform="translate(-230.01 -366.5)">
+    <path id="path3316" opacity=".73892" d="m673.37 582.76c-165.91 17.72-216.69-24.74-349.59 51.05-61.6 35.13-119.16 47.25-151.32 49.46-13.74-37.15-21.6-20.55-33.99-14.71-8.61-18.61-12.76-47.5-12.76-89.05 0-158.51 128.64-287.15 287.15-287.15 105.09 0 197.06 56.56 247.1 140.87 21.82 36.76 35.67 78.79 39.16 123.71-9.41-2.06-27.06-8.7-25.75 25.82z" transform="matrix(.47133 0 0 .47133 189.26 246.39)" filter="url(#filter3493)" fill="url(#radialGradient3329)"/>
+  </g>
+  <g id="layer7" transform="translate(-178.81 -172.49)">
+    <path id="path3498" opacity=".18719" d="m699.61 594.54c-7.83 151.52-133.29 272.11-286.75 272.11-53.97 0-104.47-14.91-147.62-40.84 16.64 5.88 34.79-6.03 7.76-25.67 45.46-6.93 133.35-20.69 204.3-70.57 111.54-78.4 132.93-138.92 196.81-147.32-2.25 44.29 23.88 15.51 25.5 12.29z" transform="matrix(.47133 0 0 .47133 138.06 52.382)" filter="url(#filter3569)" fill="url(#radialGradient3515)"/>
+  </g>
+  <metadata>
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title>divieto - no entry</dc:title>
+        <dc:date>2008-03-06T10:45:09</dc:date>
+        <dc:description>road sign, no entry, divieto di accesso</dc:description>
+        <dc:source>http://openclipart.org/detail/15540/divieto---no-entry-by-ernes</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>ernes</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>clip art</rdf:li>
+            <rdf:li>clipart</rdf:li>
+            <rdf:li>icon</rdf:li>
+            <rdf:li>image</rdf:li>
+            <rdf:li>media</rdf:li>
+            <rdf:li>png</rdf:li>
+            <rdf:li>public domain</rdf:li>
+            <rdf:li>sign</rdf:li>
+            <rdf:li>svg</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>

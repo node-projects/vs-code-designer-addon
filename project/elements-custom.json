@@ -1,0 +1,23 @@
+{
+  "elements":
+  [
+    {"tag" : "speed50", 
+		"defaultWidth": "80px", 
+		"defaultHeight": "80px", 
+		"defaultContent": "<eco-rr-speed50 id='road-sign' style='display: block;background-color: transparent;box-shadow: 5px 5px 2px #888888;border: 7px solid #EE0000;border-radius: 100px;'></div id='speed-limit'>90<div></eco-rr-speed50>", 
+		"iconPath": "#projectPath/images/speed50.png"
+	},
+    {"tag" : "oneway", 
+		"defaultWidth": "80px", 
+		"defaultHeight": "80px", 
+		"defaultContent": "<eco-rr-oneway id='road-oneway' style='display: block;'><img style='width:100%;height:100%' src='#projectPath/images/oneway.svg'></eco-rr-oneway>", 
+		"iconPath": "#projectPath/images/oneway.svg"
+	},	
+    {"tag" : "danger", 
+		"defaultWidth": "80px", 
+		"defaultHeight": "80px", 
+		"defaultContent": "<eco-rr-danger id='road-danger' style='display: block;'><img style='width:100%;height:100%' src='#projectPath/images/road.svg'></eco-rr-danger>", 
+		"iconPath": "#projectPath/images/road.svg"
+	},	
+  ]
+}
