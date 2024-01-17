@@ -4,6 +4,8 @@ const workspaceuri = window['__$vscodeWorkspaceUri'];
 
 const url = new URL(import.meta.url);
 const path = url.pathname.replace("out/webview/designer.js", "");
+const filePath= original_url.href.replace("out/webview/designer.js","");
+let projectPath= filePath + "project/";
 
 //TODO: vscode does not yet know CSSContainerRule
 if (!window.CSSContainerRule)
@@ -25,13 +27,41 @@ let designerHtmlParserService = new DesignerHtmlParserAndWriterService(path);
 serviceContainer.register("htmlParserService", designerHtmlParserService);
 serviceContainer.register("stylesheetService", designerCanvas => new CssToolsStylesheetService(designerCanvas));
 //@ts-ignore
-let json = await import('@node-projects/web-component-designer/config/elements-native.json', { assert: { type: 'json' } })
+function resolveHtmlJsonLib(jsonLib: any, projectPath: string) {
+	let elements = jsonLib.elements;
+	for (let elementDefinition of elements) {
+        if( elementDefinition.iconPath )
+        {  // sample entry for elements-custom.json
+           // {"tag" : "oneway", 
+		   // "defaultWidth": "80px", 
+		   // "defaultHeight": "80px", 
+	       // "defaultContent": "<eco-rr-oneway style='display: block;'><img style='width:100%;height:100%' src='images/oneway.svg'></eco-rr-oneway>", 
+	       // "iconPath": "images/oneway.svg" },
+            
+            let iconPath = projectPath + elementDefinition.iconPath;
+            let html=	
+                '<table><tr><td align="left" valign="middle" style="width:16px;height:16px"><img style="width:100%;height:100%" src="' + iconPath + '"></td>' +
+                '<td align="left" style="height:16px" >' + elementDefinition.tag + '</td></tr>' +
+                '</table>\n';
+            elementDefinition.displayHtml = html;
+        }
+	}
+}
+
+let json = await import('@node-projects/web-component-designer/config/elements-native.json', { assert: { type: 'json' } });
 serviceContainer.register('elementsService', new PreDefinedElementsService('native', json.default));
+
+let elements_custom_json = await import(projectPath+'elements-custom.json', { assert: { type: 'json' } });
+if( elements_custom_json)
+{
+    resolveHtmlJsonLib(elements_custom_json.default, projectPath);
+    serviceContainer.register('elementsService', new PreDefinedElementsService('custom', elements_custom_json.default, projectPath));
+}
 
 designerView.initialize(serviceContainer);
 propertyGrid.serviceContainer = serviceContainer;
 propertyGrid.instanceServiceContainer = designerView.instanceServiceContainer;
-paletteView.loadControls(serviceContainer, serviceContainer.elementsServices);
+paletteView.loadControls(serviceContainer, serviceContainer.elementsServices, projectPath);
 
 function findDesignItem(designItem: IDesignItem, position: number): IDesignItem {
     let usedItem = null;
