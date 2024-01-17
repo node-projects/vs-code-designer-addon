@@ -4,6 +4,8 @@ const workspaceuri = window['__$vscodeWorkspaceUri'];
 
 const url = new URL(import.meta.url);
 const path = url.pathname.replace("out/webview/designer.js", "");
+const filePath = original_url.href.replace("out/webview/designer.js","");
+const projectPath = filePath + "project/";
 
 //TODO: vscode does not yet know CSSContainerRule
 if (!window.CSSContainerRule)
@@ -24,14 +26,45 @@ let serviceContainer = createDefaultServiceContainer();
 let designerHtmlParserService = new DesignerHtmlParserAndWriterService(path);
 serviceContainer.register("htmlParserService", designerHtmlParserService);
 serviceContainer.register("stylesheetService", designerCanvas => new CssToolsStylesheetService(designerCanvas));
+
 //@ts-ignore
-let json = await import('@node-projects/web-component-designer/config/elements-native.json', { assert: { type: 'json' } })
-serviceContainer.register('elementsService', new PreDefinedElementsService('native', json.default));
+function resolveHtmlJsonLib(jsonLib: any, projectPath: string) {
+    let elements = jsonLib.elements;
+    for (let elementDefinition of elements) {
+        if( elementDefinition.iconPath )
+        {   // support for #projectPath macro:
+            // {"tag" : "oneway", 
+            // "defaultWidth": "80px", 
+            // "defaultHeight": "80px", 
+            // "defaultContent": "<eco-rr-oneway id='road-oneway' style='display: block;'><img style='width:100%;height:100%' src='#projectPath/images/oneway.svg'></eco-rr-oneway>", 
+            // "iconPath": "#projectPath/images/oneway.svg"
+            // },
+ 
+            let iconPath= elementDefinition.iconPath.includes('#')? elementDefinition.iconPath.replace(/#projectPath/gi, projectPath) : (projectPath + elementDefinition.iconPath);
+            let defaultContent= elementDefinition.defaultContent.replace(/#projectPath/gi, projectPath);
+            let html=	'<table><tr><td align="left" valign="middle" style="width:16px;height:16px"><img style="width:100%;height:100%" src="' + iconPath + '"></td>' +
+			'<td align="left" style="height:16px" >' + elementDefinition.tag + '</td></tr>' +
+			'</table>\n';
+
+            elementDefinition.displayHtml = html;
+            elementDefinition.defaultContent = defaultContent;
+        }
+    }
+}
+
+let elements_native_json = await import(projectPath+'elements-native.json', { assert: { type: 'json' } });
+resolveHtmlJsonLib(elements_native_json.default,projectPath);
+
+let elements_custom_json = await import(projectPath+'elements-custom.json', { assert: { type: 'json' } })
+resolveHtmlJsonLib(elements_custom_json.default,projectPath);
+
+serviceContainer.register('elementsService', new PreDefinedElementsService('native', elements_native_json.default));
+serviceContainer.register('elementsService', new PreDefinedElementsService('custom', elements_custom_json.default));
 
 designerView.initialize(serviceContainer);
 propertyGrid.serviceContainer = serviceContainer;
 propertyGrid.instanceServiceContainer = designerView.instanceServiceContainer;
-paletteView.loadControls(serviceContainer, serviceContainer.elementsServices);
+paletteView.loadControls(serviceContainer, serviceContainer.elementsServices, projectPath);
 
 function findDesignItem(designItem: IDesignItem, position: number): IDesignItem {
     let usedItem = null;
