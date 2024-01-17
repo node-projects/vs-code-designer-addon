@@ -31,32 +31,31 @@ serviceContainer.register("stylesheetService", designerCanvas => new CssToolsSty
 function resolveHtmlJsonLib(jsonLib: any, projectPath: string) {
     let elements = jsonLib.elements;
     for (let elementDefinition of elements) {
-		if( elementDefinition.iconPath )
-		{  // support for #projectPath macro:
-           // {"tag" : "oneway", 
-		   // "defaultWidth": "80px", 
-		   // "defaultHeight": "80px", 
-	       // "defaultContent": "<eco-rr-oneway id='road-oneway' style='display: block;'><img style='width:100%;height:100%' src='#projectPath/images/oneway.svg'></eco-rr-oneway>", 
-	       // "iconPath": "#projectPath/images/oneway.svg"
-           // },
+        if( elementDefinition.iconPath )
+        {   // support for #projectPath macro:
+            // {"tag" : "oneway", 
+            // "defaultWidth": "80px", 
+            // "defaultHeight": "80px", 
+            // "defaultContent": "<eco-rr-oneway id='road-oneway' style='display: block;'><img style='width:100%;height:100%' src='#projectPath/images/oneway.svg'></eco-rr-oneway>", 
+            // "iconPath": "#projectPath/images/oneway.svg"
+            // },
  
             let iconPath= elementDefinition.iconPath.includes('#')? elementDefinition.iconPath.replace(/#projectPath/gi, projectPath) : (projectPath + elementDefinition.iconPath);
             let defaultContent= elementDefinition.defaultContent.replace(/#projectPath/gi, projectPath);
-			let html=	
-				'<table><tr><td align="left" valign="middle" style="width:16px;height:16px"><img style="width:100%;height:100%" src="' + iconPath + '"></td>' +
-				'<td align="left" style="height:16px" >' + elementDefinition.tag + '</td></tr>' +
-				'</table>\n';
+            let html=	'<table><tr><td align="left" valign="middle" style="width:16px;height:16px"><img style="width:100%;height:100%" src="' + iconPath + '"></td>' +
+			'<td align="left" style="height:16px" >' + elementDefinition.tag + '</td></tr>' +
+			'</table>\n';
 
-			elementDefinition.displayHtml = html;
-			elementDefinition.defaultContent = defaultContent;
-		}
-	}
+            elementDefinition.displayHtml = html;
+            elementDefinition.defaultContent = defaultContent;
+        }
+    }
 }
 
 let elements_native_json = await import(projectPath+'elements-native.json', { assert: { type: 'json' } });
 resolveHtmlJsonLib(elements_native_json.default,projectPath);
 
-let elements_custom_json = await import(projectPath+'elements-html.json', { assert: { type: 'json' } })
+let elements_custom_json = await import(projectPath+'elements-custom.json', { assert: { type: 'json' } })
 resolveHtmlJsonLib(elements_custom_json.default,projectPath);
 
 serviceContainer.register('elementsService', new PreDefinedElementsService('native', elements_native_json.default));
