@@ -27,6 +27,9 @@ let designerHtmlParserService = new DesignerHtmlParserAndWriterService(path);
 serviceContainer.register("htmlParserService", designerHtmlParserService);
 serviceContainer.register("stylesheetService", designerCanvas => new CssToolsStylesheetService(designerCanvas));
 //@ts-ignore
+let json = await import('@node-projects/web-component-designer/config/elements-native.json', { assert: { type: 'json' } });
+serviceContainer.register('elementsService', new PreDefinedElementsService('native', json.default));
+
 function resolveHtmlJsonLib(jsonLib: any, projectPath: string) {
 	let elements = jsonLib.elements;
 	for (let elementDefinition of elements) {
@@ -45,11 +48,8 @@ function resolveHtmlJsonLib(jsonLib: any, projectPath: string) {
                 '</table>\n';
             elementDefinition.displayHtml = html;
         }
-	}
+    }
 }
-
-let json = await import('@node-projects/web-component-designer/config/elements-native.json', { assert: { type: 'json' } });
-serviceContainer.register('elementsService', new PreDefinedElementsService('native', json.default));
 
 let elements_custom_json = await import(projectPath+'elements-custom.json', { assert: { type: 'json' } });
 if( elements_custom_json)
