@@ -22,6 +22,19 @@ await window.customElements.whenDefined("node-projects-designer-view");
 const designerView = <DesignerView>document.querySelector("node-projects-designer-view");
 const propertyGrid = <PropertyGrid>document.getElementById("propertyGrid");
 const paletteView = <PaletteView>document.getElementById("paletteView");
+
+function setBaseHref(projectPath: string) {
+	var baseElement = document.querySelector('base');
+	if( baseElement === undefined)
+	{
+		var host = document.querySelector(host);
+		baseElement = document.createElement(elem);
+		host.insertBefore(baseElement, host.firstChild);
+	}
+	baseElement.setAttribute("href", projectPath);
+}
+setBaseHref(projectPath);
+
 let serviceContainer = createDefaultServiceContainer();
 let designerHtmlParserService = new DesignerHtmlParserAndWriterService(path);
 serviceContainer.register("htmlParserService", designerHtmlParserService);
