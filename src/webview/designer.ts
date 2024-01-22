@@ -25,14 +25,19 @@ const paletteView = <PaletteView>document.getElementById("paletteView");
 
 function setBaseHref(projectPath: string) {
 	var baseElement = document.querySelector('base');
-	if( baseElement === undefined)
+	if(baseElement === undefined)
 	{
-		var host = document.querySelector(host);
-		baseElement = document.createElement(elem);
-		host.insertBefore(baseElement, host.firstChild);
+		var host = document.querySelector('head');
+		if(host)
+		{
+			baseElement = document.createElement('base');
+			host.insertBefore(baseElement, host.firstChild);
+		}
 	}
+	if(baseElement)
 	baseElement.setAttribute("href", projectPath);
 }
+
 setBaseHref(projectPath);
 
 let serviceContainer = createDefaultServiceContainer();
@@ -43,20 +48,20 @@ serviceContainer.register("stylesheetService", designerCanvas => new CssToolsSty
 let json = await import('@node-projects/web-component-designer/config/elements-native.json', { assert: { type: 'json' } });
 serviceContainer.register('elementsService', new PreDefinedElementsService('native', json.default));
 
+/*
 function resolveHtmlJsonLib(jsonLib: any, projectPath: string) {
 	let elements = jsonLib.elements;
 	for (let elementDefinition of elements) {
         if( elementDefinition.iconPath )
         {  // sample entry for elements-custom.json
            // {"tag" : "oneway", 
-		   // "defaultWidth": "80px", 
-		   // "defaultHeight": "80px", 
-	       // "defaultContent": "<eco-rr-oneway style='display: block;'><img style='width:100%;height:100%' src='images/oneway.svg'></eco-rr-oneway>", 
-	       // "iconPath": "images/oneway.svg" },
-            
-            let iconPath = projectPath + elementDefinition.iconPath;
-            let html=	
-                '<table><tr><td align="left" valign="middle" style="width:16px;height:16px"><img style="width:100%;height:100%" src="' + iconPath + '"></td>' +
+	   // "defaultWidth": "80px", 
+	   // "defaultHeight": "80px", 
+	   // "defaultContent": "<eco-rr-oneway style='display: block;'><img style='width:100%;height:100%' src='images/oneway.svg'></eco-rr-oneway>", 
+           // "iconPath": "images/oneway.svg" },
+		
+           let html=	
+                '<table><tr><td align="left" valign="middle" style="width:16px;height:16px"><img style="width:100%;height:100%" src="' + elementDefinition.iconPath + '"></td>' +
                 '<td align="left" style="height:16px" >' + elementDefinition.tag + '</td></tr>' +
                 '</table>\n';
             elementDefinition.displayHtml = html;
@@ -70,6 +75,7 @@ if( elements_custom_json)
     resolveHtmlJsonLib(elements_custom_json.default, projectPath);
     serviceContainer.register('elementsService', new PreDefinedElementsService('custom', elements_custom_json.default, projectPath));
 }
+*/
 
 designerView.initialize(serviceContainer);
 propertyGrid.serviceContainer = serviceContainer;
