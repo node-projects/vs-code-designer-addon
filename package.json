@@ -64,20 +64,20 @@
 		"publish": "vsce publish"
 	},
 	"devDependencies": {
-		"@types/node": "^20.11.0",
+		"@types/node": "^20.11.5",
 		"@types/vscode": "^1.77.0",
 		"@types/vscode-webview": "^1.57.4",
-		"@typescript-eslint/eslint-plugin": "^6.18.1",
-		"@typescript-eslint/parser": "^6.18.1",
+		"@typescript-eslint/eslint-plugin": "^6.19.1",
+		"@typescript-eslint/parser": "^6.19.1",
 		"@vscode/vsce": "^2.22.0",
 		"eslint": "^8.56.0"
 	},
 	"dependencies": {
 		"@adobe/css-tools": "4.3.2",
-		"@node-projects/base-custom-webcomponent": "^0.21.7",
+		"@node-projects/base-custom-webcomponent": "^0.22.0",
 		"@node-projects/lean-he-esm": "^3.3.0",
 		"@node-projects/node-html-parser-esm": "^6.2.0",
-		"@node-projects/web-component-designer": "^0.1.51",
+		"@node-projects/web-component-designer": "^0.1.59",
 		"@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent": "^0.1.5",
 		"@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "^0.1.9",
 		"@node-projects/web-component-designer-stylesheetservice-css-tools": "^0.1.3",

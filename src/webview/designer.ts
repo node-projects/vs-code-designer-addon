@@ -11,7 +11,7 @@ if (!window.CSSContainerRule)
     window.CSSContainerRule = class { }
 
 import { DomHelper } from '@node-projects/base-custom-webcomponent';
-import { DesignerView, IDesignItem, PaletteView, PreDefinedElementsService, PropertyGrid } from '@node-projects/web-component-designer';
+import { DesignerView, IDesignItem, PaletteView, PreDefinedElementsService, PropertyGrid, WebcomponentManifestElementsService, WebcomponentManifestPropertiesService } from '@node-projects/web-component-designer';
 import createDefaultServiceContainer from '@node-projects/web-component-designer/dist/elements/services/DefaultServiceBootstrap.js';
 import { DesignerHtmlParserAndWriterService } from './DesignerHtmlParserAndWriterService.js';
 import { CssToolsStylesheetService } from '@node-projects/web-component-designer-stylesheetservice-css-tools';
@@ -94,6 +94,18 @@ window.addEventListener('message', async event => {
             const item = findDesignItem(root, pos);
             designerView.instanceServiceContainer.selectionService.setSelectedElements([item]);
             break;
+        case 'manifests':
+            let n = 0;
+            for (let m of message.manifests) {
+                n++;
+                let nm = 'local ' + n;
+                let x = await fetch(m);
+                const manifest = await x.json();
+                serviceContainer.register("elementsService", new WebcomponentManifestElementsService(nm, '', manifest));
+                serviceContainer.register("propertyService", new WebcomponentManifestPropertiesService(nm, manifest));
+            }
+            paletteView.loadControls(serviceContainer, serviceContainer.elementsServices);
+            break;
     }
 });
 
@@ -120,4 +132,4 @@ designerView.designerCanvas.onContentChanged.on(() => {
     }
 })
 
-vscode.postMessage({ type: 'requestUpdate' });
+vscode.postMessage({ type: 'firstLoad' });

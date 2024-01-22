@@ -23,11 +23,28 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 
 	private static readonly viewType = 'designer.designerTextEditor';
 
-	constructor(
-		private readonly context: vscode.ExtensionContext
-	) {
-		//debugger;
-	 }
+	constructor(private readonly context: vscode.ExtensionContext) { }
+
+	public async addCustomElementsJsons(webviewPanel: vscode.WebviewPanel) {
+		//TODO:
+		//-> check current project if it has a custome-elements.json, or if it is linked in a package.json
+		//-> check NPM packages for custom elements
+		const manifests = []
+		if (vscode.workspace.workspaceFolders) {
+			for (let f of vscode.workspace.workspaceFolders) {
+				const p = vscode.Uri.joinPath(f.uri, 'custom-elements.json');
+				try {
+					const stat = await vscode.workspace.fs.stat(p);
+					manifests.push(webviewPanel.webview.asWebviewUri(p).toString());
+				} catch { }
+			}
+		}
+
+		webviewPanel.webview.postMessage({
+			type: 'manifests',
+			manifests: manifests
+		});
+	}
 
 	public async resolveCustomTextEditor(document: vscode.TextDocument, webviewPanel: vscode.WebviewPanel, _token: vscode.CancellationToken): Promise<void> {
 		webviewPanel.webview.options = { enableScripts: true };
@@ -82,8 +99,9 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 		// Receive message from the webview.
 		webviewPanel.webview.onDidReceiveMessage(e => {
 			switch (e.type) {
-				case 'requestUpdate':
+				case 'firstLoad':
 					updateWebview();
+					this.addCustomElementsJsons(webviewPanel);
 					return;
 				case 'updateDocument': {
 					if (!disableUpdateWebview) {
@@ -118,8 +136,13 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 					return;
 			}
 		});
+	}
 
-		updateWebview();
+	private addBaseUri(webview: vscode.Webview) {
+		if (vscode.workspace.workspaceFolders?.length) {
+			return `<base href="${webview.asWebviewUri(vscode.workspace.workspaceFolders[0].uri)}" />`
+		}
+		return '';
 	}
 
 	/**
@@ -143,7 +166,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
 			<!--<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">-->
-
+			<base href="${this.addBaseUri(webview)}" />
 			<script nonce="${nonce}" src="${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/typescript/lib/typescript.js'))}"></script>
 			<script nonce="${nonce}" type="esms-options">
 			  {
