@@ -1,3 +1,4 @@
+import path = require('path');
 import * as vscode from 'vscode';
 
 export function getNonce() {
@@ -48,7 +49,9 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 
 	public async resolveCustomTextEditor(document: vscode.TextDocument, webviewPanel: vscode.WebviewPanel, _token: vscode.CancellationToken): Promise<void> {
 		webviewPanel.webview.options = { enableScripts: true };
-		webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
+		const folder = path.dirname(document.fileName);
+		webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview, folder);
+
 
 		let disableSelectionChange = false;
 		let disableUpdateWebview = false;
@@ -138,21 +141,15 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 		});
 	}
 
-	private addBaseUri(webview: vscode.Webview) {
-		if (vscode.workspace.workspaceFolders?.length) {
-			return `<base href="${webview.asWebviewUri(vscode.workspace.workspaceFolders[0].uri)}" />`
-		}
-		return '';
-	}
-
 	/**
 	 * Get the static html used for the editor webviews.
 	 */
-	private getHtmlForWebview(webview: vscode.Webview): string {
+	private getHtmlForWebview(webview: vscode.Webview, documentFolder: string): string {
 		// Local path to main script run in the webview
 		const scriptPathOnDisk = vscode.Uri.joinPath(this.context.extensionUri, 'out', 'webview', 'designer.js');
 
 		// And the uri we use to load this script in the webview
+		const baseuri = webview.asWebviewUri(vscode.Uri.file(documentFolder)) + '/';
 		const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
 		const folder = vscode?.workspace?.workspaceFolders?.[0];
 		const workspaceUri = webview.asWebviewUri(<any>folder?.uri);
@@ -166,7 +163,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
 			<!--<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">-->
-			<base href="${this.addBaseUri(webview)}" />
+			<base href="${baseuri}" />
 			<script nonce="${nonce}" src="${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/typescript/lib/typescript.js'))}"></script>
 			<script nonce="${nonce}" type="esms-options">
 			  {
