@@ -2,7 +2,7 @@
 	"name": "vscode-designer-addon",
 	"displayName": "HTML Wysiwyg (What you see is what you get) Designer Addon",
 	"description": "A Graphical HTML Designer",
-	"version": "1.1.6",
+	"version": "1.1.7",
 	"publisher": "node-projects",
 	"license": "MIT",
 	"repository": {
