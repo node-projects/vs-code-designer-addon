@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { DesignerTextEditor } from './DesignerTextEditor';
-import { DesignerTreeView } from './DesignerTreeView';
+import { DesignerTextEditor } from './DesignerTextEditor.js';
+import { DesignerTreeView } from './DesignerTreeView.js';
 
 export function activate(context: vscode.ExtensionContext) {
 	let t = new DesignerTreeView;

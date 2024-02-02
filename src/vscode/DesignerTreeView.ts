@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { DesignerTextEditor } from './DesignerTextEditor';
 
 export class DesignerTreeView implements vscode.TreeDataProvider<TreeItem>, vscode.TreeDragAndDropController<TreeItem> {
 
