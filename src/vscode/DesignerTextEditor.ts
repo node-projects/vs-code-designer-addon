@@ -1,4 +1,3 @@
-import path = require('path');
 import * as vscode from 'vscode';
 
 export function getNonce() {
@@ -49,7 +48,10 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 
 	public async resolveCustomTextEditor(document: vscode.TextDocument, webviewPanel: vscode.WebviewPanel, _token: vscode.CancellationToken): Promise<void> {
 		webviewPanel.webview.options = { enableScripts: true };
-		const folder = path.dirname(document.fileName);
+		const parts = document.fileName.replaceAll('\\', '/').split('/');
+		parts.pop();
+		const folder = parts.join('/');
+
 		webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview, folder);
 
 

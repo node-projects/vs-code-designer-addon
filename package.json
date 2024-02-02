@@ -2,7 +2,7 @@
 	"name": "vscode-designer-addon",
 	"displayName": "HTML Wysiwyg (What you see is what you get) Designer Addon",
 	"description": "A Graphical HTML Designer",
-	"version": "1.1.5",
+	"version": "1.1.6",
 	"publisher": "node-projects",
 	"license": "MIT",
 	"repository": {
@@ -20,7 +20,7 @@
 		"onWebviewPanel:designer"
 	],
 	"main": "./out/vscode/extension.js",
-	"browser": "./out/vscode/extension.js",
+	"browser": "./out/vscodeWeb/extension.js",
 	"contributes": {
 		"customEditors": [
 			{
@@ -54,7 +54,7 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile && npm run compileWebview",
+		"vscode:prepublish": "npm run compile && npm run compileWebview && npm run esbuild",
 		"compile": "tsc -p ./src/vscode",
 		"compileWebview": "tsc -p ./src/webview",
 		"lint": "eslint \"src/**/*.ts\"",
@@ -62,7 +62,8 @@
 		"watchWebview": "tsc -w -p ./src/webview",
 		"vsce": "vsce",
 		"package": "vsce package",
-		"publish": "vsce publish"
+		"publish": "vsce publish",
+		"esbuild": "esbuild ./out/vscode/extension.js --bundle --outfile=out/vscodeWeb/extension.js --external:vscode --format=cjs --platform=node"
 	},
 	"devDependencies": {
 		"@types/node": "^20.11.16",
@@ -71,6 +72,7 @@
 		"@typescript-eslint/eslint-plugin": "^6.20.0",
 		"@typescript-eslint/parser": "^6.20.0",
 		"@vscode/vsce": "^2.23.0",
+		"esbuild": "^0.20.0",
 		"eslint": "^8.56.0"
 	},
 	"dependencies": {
