@@ -1,9 +1,7 @@
-# info
-
-!!! be aware, this extension is only a preview, it's still buggy, but will get better.
-
 # vs-code-designer-addon
-A VSCode Addon using the web-component-designer
+A VSCode WYSIWYG HTML Designer Addon.
+
+it is also usable in VSCodeWeb
 
 ## addon-page
 
