@@ -29,9 +29,9 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 		//TODO:
 		//-> check current project if it has a custome-elements.json, or if it is linked in a package.json
 		//-> check NPM packages for custom elements
-		const manifests = []
+		const manifests = [];
 		if (vscode.workspace.workspaceFolders) {
-			for (let f of vscode.workspace.workspaceFolders) {
+			for (const f of vscode.workspace.workspaceFolders) {
 				const p = vscode.Uri.joinPath(f.uri, 'custom-elements.json');
 				try {
 					const stat = await vscode.workspace.fs.stat(p);
