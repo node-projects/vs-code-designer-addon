@@ -33,23 +33,6 @@ propertyGrid.serviceContainer = serviceContainer;
 propertyGrid.instanceServiceContainer = designerView.instanceServiceContainer;
 paletteView.loadControls(serviceContainer, serviceContainer.elementsServices);
 
-function findDesignItem(designItem: IDesignItem, position: number): IDesignItem {
-    let usedItem = null;
-    if (designItem.hasChildren) {
-        for (let d of designItem.children()) {
-            const nodePosition = designerView.instanceServiceContainer.designItemDocumentPositionService.getPosition(d);
-            if (nodePosition) {
-                if (nodePosition.start <= position)
-                    usedItem = d;
-            }
-        }
-    }
-    if (usedItem) {
-        return findDesignItem(usedItem, position)
-    }
-    return designItem;
-}
-
 function fixDesignItemsPaths(designItem: IDesignItem) {
     if (designItem.hasChildren) {
         for (let d of designItem.children()) {
@@ -90,9 +73,9 @@ window.addEventListener('message', async event => {
             break;
         case 'changeSelection':
             const pos = message.position;
+            const posEnd = message.positionEnd;
             const root = designerView.designerCanvas.rootDesignItem;
-            const item = findDesignItem(root, pos);
-            designerView.instanceServiceContainer.selectionService.setSelectedElements([item]);
+            designerView.instanceServiceContainer.selectionService.setSelectionByTextRange(pos, posEnd);
             break;
         case 'manifests':
             let n = 0;
