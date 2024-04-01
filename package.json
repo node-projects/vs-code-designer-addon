@@ -66,25 +66,25 @@
 		"esbuild": "esbuild ./out/vscode/extension.js --bundle --outfile=out/vscodeWeb/extension.js --external:vscode --format=cjs --platform=node"
 	},
 	"devDependencies": {
-		"@types/node": "^20.11.25",
+		"@types/node": "^20.12.2",
 		"@types/vscode": "^1.77.0",
 		"@types/vscode-webview": "^1.57.5",
-		"@typescript-eslint/eslint-plugin": "^7.2.0",
-		"@typescript-eslint/parser": "^7.2.0",
+		"@typescript-eslint/eslint-plugin": "^7.4.0",
+		"@typescript-eslint/parser": "^7.4.0",
 		"@vscode/vsce": "^2.24.0",
-		"esbuild": "^0.20.1",
+		"esbuild": "^0.20.2",
 		"eslint": "^8.57.0"
 	},
 	"dependencies": {
 		"@adobe/css-tools": "4.3.3",
-		"@node-projects/base-custom-webcomponent": "^0.24.0",
+		"@node-projects/base-custom-webcomponent": "^0.25.9",
 		"@node-projects/lean-he-esm": "^3.3.0",
 		"@node-projects/node-html-parser-esm": "^6.2.0",
-		"@node-projects/web-component-designer": "^0.1.102",
+		"@node-projects/web-component-designer": "^0.1.112",
 		"@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent": "^0.1.5",
 		"@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "^0.1.10",
-		"@node-projects/web-component-designer-stylesheetservice-css-tools": "^0.1.3",
-		"es-module-shims": "^1.8.3",
-		"typescript": "^5.4.2"
+		"@node-projects/web-component-designer-stylesheetservice-css-tools": "^0.1.4",
+		"es-module-shims": "^1.9.0",
+		"typescript": "^5.4.3"
 	}
 }

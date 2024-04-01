@@ -5,7 +5,7 @@
 		"target": "ESNext",
 		"moduleResolution": "node",
 		"strict": true,
-		"lib": ["DOM"],
+		"lib": ["DOM", "ES2021.WeakRef"],
 		"rootDir": ".",
 		"outDir": "../../out/webview",
 	},
