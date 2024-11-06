@@ -104,7 +104,7 @@ designerView.instanceServiceContainer.selectionService.onSelectionChanged.on(() 
 });*/
 designerView.designerCanvas.onContentChanged.on(() => {
     if (!parsing) {
-        let code = designerView.getHTML();
+        let code = designerView.getDesignerHTML();
         let st = designerView.instanceServiceContainer.stylesheetService.getStylesheets()?.find(x => x.name == 'css');
         let css = '';
         if (st) {
