@@ -155,7 +155,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 		const baseuri = webview.asWebviewUri(vscode.Uri.file(documentFolder)) + '/';
 		const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
 		const folder = vscode?.workspace?.workspaceFolders?.[0];
-		const workspaceUri = webview.asWebviewUri(<any>folder?.uri);
+		const workspaceUri = baseuri; // webview.asWebviewUri(<any>folder?.uri);
 		const nonce = getNonce();
 
 		return /* html */`
