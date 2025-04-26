@@ -54,7 +54,6 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 
 		webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview, folder);
 
-
 		let disableSelectionChange = false;
 		let disableUpdateWebview = false;
 

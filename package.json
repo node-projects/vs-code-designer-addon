@@ -2,7 +2,7 @@
 	"name": "vscode-designer-addon",
 	"displayName": "HTML Wysiwyg (What you see is what you get) Designer Addon",
 	"description": "A Graphical HTML Designer",
-	"version": "1.1.18",
+	"version": "1.1.19",
 	"publisher": "node-projects",
 	"license": "MIT",
 	"repository": {
@@ -29,6 +29,9 @@
 				"selector": [
 					{
 						"filenamePattern": "*.html"
+					},
+					{
+						"filenamePattern": "*.htm"
 					},
 					{
 						"filenamePattern": "*.vue"
@@ -66,25 +69,25 @@
 		"esbuild": "esbuild ./out/vscode/extension.js --bundle --outfile=out/vscodeWeb/extension.js --external:vscode --format=cjs --platform=node"
 	},
 	"devDependencies": {
-		"@types/node": "^22.10.2",
-		"@types/vscode": "^1.77.0",
+		"@types/node": "^22.15.2",
+		"@types/vscode": "^1.99.1",
 		"@types/vscode-webview": "^1.57.5",
-		"@typescript-eslint/eslint-plugin": "^8.18.2",
-		"@typescript-eslint/parser": "^8.18.2",
-		"@vscode/vsce": "^3.2.1",
-		"esbuild": "^0.24.2",
-		"eslint": "^9.17.0"
+		"@typescript-eslint/eslint-plugin": "^8.31.0",
+		"@typescript-eslint/parser": "^8.31.0",
+		"@vscode/vsce": "^3.3.2",
+		"esbuild": "^0.25.3",
+		"eslint": "^9.25.1"
 	},
 	"dependencies": {
-		"@adobe/css-tools": "4.4.1",
-		"@node-projects/base-custom-webcomponent": "^0.27.8",
+		"@adobe/css-tools": "4.4.2",
+		"@node-projects/base-custom-webcomponent": "^0.30.0",
 		"@node-projects/lean-he-esm": "^3.3.0",
 		"@node-projects/node-html-parser-esm": "^6.2.0",
-		"@node-projects/web-component-designer": "^0.1.236",
+		"@node-projects/web-component-designer": "^0.1.255",
 		"@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent": "^0.1.5",
 		"@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "^0.1.11",
 		"@node-projects/web-component-designer-stylesheetservice-css-tools": "^0.1.10",
-		"es-module-shims": "^1.10.1",
-		"typescript": "^5.7.2"
+		"es-module-shims": "^2.4.0",
+		"typescript": "^5.8.3"
 	}
 }
