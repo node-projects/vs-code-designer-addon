@@ -174,59 +174,73 @@
 			},
 			{
 				"command": "designer.outline.copy",
-				"title": "Copy"
+				"title": "Copy",
+				"icon": "$(copy)"
 			},
 			{
 				"command": "designer.outline.cut",
-				"title": "Cut"
+				"title": "Cut",
+				"icon": "$(scissors)"
 			},
 			{
 				"command": "designer.outline.paste",
-				"title": "Paste"
+				"title": "Paste",
+				"icon": "$(clippy)"
 			},
 			{
 				"command": "designer.outline.delete",
-				"title": "Delete"
+				"title": "Delete",
+				"icon": "$(trash)"
 			},
 			{
 				"command": "designer.outline.rotateLeft",
-				"title": "Rotate Left"
+				"title": "Rotate Left",
+				"icon": "$(debug-reverse-continue)"
 			},
 			{
 				"command": "designer.outline.rotateRight",
-				"title": "Rotate Right"
+				"title": "Rotate Right",
+				"icon": "$(debug-continue)"
 			},
 			{
 				"command": "designer.outline.toFront",
-				"title": "To Front"
+				"title": "To Front",
+				"icon": "$(arrow-circle-up)"
 			},
 			{
 				"command": "designer.outline.moveForward",
-				"title": "Move Forward"
+				"title": "Move Forward",
+				"icon": "$(arrow-up)"
 			},
 			{
 				"command": "designer.outline.moveBackward",
-				"title": "Move Backward"
+				"title": "Move Backward",
+				"icon": "$(arrow-down)"
 			},
 			{
 				"command": "designer.outline.toBack",
-				"title": "To Back"
+				"title": "To Back",
+				"icon": "$(arrow-circle-down)"
 			},
 			{
 				"command": "designer.outline.moveTo",
-				"title": "Move To"
+				"title": "Move To",
+				"icon": "$(move)"
 			},
 			{
 				"command": "designer.outline.jumpTo",
-				"title": "Jump To"
+				"title": "Jump To",
+				"icon": "$(search)"
 			},
 			{
 				"command": "designer.outline.expandChildren",
-				"title": "Expand Children"
+				"title": "Expand Children",
+				"icon": "$(expand-all)"
 			},
 			{
 				"command": "designer.outline.collapseChildren",
-				"title": "Collapse Children"
+				"title": "Collapse Children",
+				"icon": "$(collapse-all)"
 			}
 		],
 		"customEditors": [

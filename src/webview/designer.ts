@@ -11,7 +11,7 @@ if (!window.CSSContainerRule)
     window.CSSContainerRule = class { }
 
 import { DomHelper } from '@node-projects/base-custom-webcomponent';
-import { DesignerView, IDesignItem, NodeType, PaletteView, PreDefinedElementsService, PropertyGrid, WebcomponentManifestElementsService, WebcomponentManifestPropertiesService } from '@node-projects/web-component-designer';
+import { CommandType, DesignerView, IDesignItem, NodeType, PaletteView, PreDefinedElementsService, PropertyGrid, WebcomponentManifestElementsService, WebcomponentManifestPropertiesService } from '@node-projects/web-component-designer';
 import createDefaultServiceContainer from '@node-projects/web-component-designer/dist/elements/services/DefaultServiceBootstrap.js';
 import { DesignerHtmlParserAndWriterService } from './DesignerHtmlParserAndWriterService.js';
 import { CssParserStylesheetService } from '@node-projects/web-component-designer-stylesheetservice-css-parser';
@@ -222,13 +222,66 @@ function handleOutlineCommand(command: string) {
             }
             sendOutlineData(designerView.designerCanvas.rootDesignItem);
             break;
-        // Context menu commands are dispatched as custom events
-        // so the host application can handle them
-        default:
-            window.dispatchEvent(new CustomEvent('designer-outline-command', {
-                detail: { command, selectedElements }
-            }));
+        case 'copy':
+            designerView.executeCommand({ type: CommandType.copy });
             break;
+        case 'cut':
+            designerView.executeCommand({ type: CommandType.cut });
+            break;
+        case 'paste':
+            designerView.executeCommand({ type: CommandType.paste });
+            break;
+        case 'delete':
+            designerView.executeCommand({ type: CommandType.delete });
+            break;
+        case 'rotateLeft':
+            designerView.executeCommand({ type: CommandType.rotateCounterClockwise });
+            break;
+        case 'rotateRight':
+            designerView.executeCommand({ type: CommandType.rotateClockwise });
+            break;
+        case 'toFront':
+            designerView.executeCommand({ type: CommandType.moveToFront });
+            break;
+        case 'moveForward':
+            designerView.executeCommand({ type: CommandType.moveForward });
+            break;
+        case 'moveBackward':
+            designerView.executeCommand({ type: CommandType.moveBackward });
+            break;
+        case 'toBack':
+            designerView.executeCommand({ type: CommandType.moveToBack });
+            break;
+        case 'moveTo': {
+            const item = selectedElements[0];
+            const coord = designerView.designerCanvas.getNormalizedElementCoordinates(item.element);
+            designerView.designerCanvas.zoomPoint(
+                { x: coord.x + coord.width / 2, y: coord.y + coord.height / 2 },
+                designerView.designerCanvas.zoomFactor
+            );
+            break;
+        }
+        case 'jumpTo': {
+            const item = selectedElements[0];
+            const offset = 10;
+            const coord = designerView.designerCanvas.getNormalizedElementCoordinates(item.element);
+            const startPoint = { x: coord.x - offset, y: coord.y - offset };
+            const endPoint = { x: coord.x + coord.width + offset, y: coord.y + coord.height + offset };
+            const rect = {
+                x: Math.min(startPoint.x, endPoint.x),
+                y: Math.min(startPoint.y, endPoint.y),
+                width: Math.abs(startPoint.x - endPoint.x),
+                height: Math.abs(startPoint.y - endPoint.y),
+            };
+            const zFactorWidth = designerView.designerCanvas.outerRect.width / rect.width;
+            const zFactorHeight = designerView.designerCanvas.outerRect.height / rect.height;
+            const zoomFactor = Math.min(zFactorWidth, zFactorHeight);
+            designerView.designerCanvas.zoomPoint(
+                { x: coord.x + coord.width / 2, y: coord.y + coord.height / 2 },
+                zoomFactor
+            );
+            break;
+        }
     }
 }
 

@@ -17,8 +17,6 @@ const outlineCommands = [
 	'designer.outline.toBack',
 	'designer.outline.moveTo',
 	'designer.outline.jumpTo',
-	'designer.outline.expandChildren',
-	'designer.outline.collapseChildren',
 ];
 
 export function activate(context: vscode.ExtensionContext) {
@@ -37,4 +35,14 @@ export function activate(context: vscode.ExtensionContext) {
 			})
 		);
 	}
+
+	// Expand/collapse operate directly on the VS Code outline tree view
+	context.subscriptions.push(
+		vscode.commands.registerCommand('designer.outline.expandChildren', () => {
+			vscode.commands.executeCommand('list.expandRecursively');
+		}),
+		vscode.commands.registerCommand('designer.outline.collapseChildren', () => {
+			vscode.commands.executeCommand('list.collapseAll');
+		})
+	);
 }
