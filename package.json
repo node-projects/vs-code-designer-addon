@@ -21,6 +21,9 @@
 	],
 	"main": "./out/vscode/extension.js",
 	"browser": "./out/vscodeWeb/extension.js",
+	"enabledApiProposals": [
+		"customEditorOutline"
+	],
 	"contributes": {
 		"menus": {
 			"editor/title": [
@@ -95,25 +98,25 @@
 		"esbuild": "esbuild ./out/vscode/extension.js --bundle --outfile=out/vscodeWeb/extension.js --external:vscode --format=cjs --platform=node"
 	},
 	"devDependencies": {
-		"@types/node": "^22.15.2",
+		"@types/node": "^25.5.0",
 		"@types/vscode": "^1.77.0",
 		"@types/vscode-webview": "^1.57.5",
-		"@typescript-eslint/eslint-plugin": "^8.31.0",
-		"@typescript-eslint/parser": "^8.31.0",
-		"@vscode/vsce": "^3.3.2",
-		"esbuild": "^0.25.3",
-		"eslint": "^9.25.1"
+		"@typescript-eslint/eslint-plugin": "^8.57.2",
+		"@typescript-eslint/parser": "^8.57.2",
+		"@vscode/vsce": "^3.7.1",
+		"esbuild": "^0.27.4",
+		"eslint": "^10.1.0"
 	},
 	"dependencies": {
-		"@adobe/css-tools": "4.4.2",
-		"@node-projects/base-custom-webcomponent": "^0.30.0",
-		"@node-projects/lean-he-esm": "^3.3.0",
-		"@node-projects/node-html-parser-esm": "^6.2.0",
-		"@node-projects/web-component-designer": "^0.1.255",
+		"@node-projects/base-custom-webcomponent": "^0.45.0",
+		"@node-projects/css-parser": "^5.2.0",
+		"@node-projects/lean-he-esm": "^3.4.1",
+		"@node-projects/node-html-parser-esm": "^6.4.1",
+		"@node-projects/web-component-designer": "^0.1.339",
 		"@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent": "^0.1.5",
-		"@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "^0.1.11",
-		"@node-projects/web-component-designer-stylesheetservice-css-tools": "^0.1.10",
-		"es-module-shims": "^2.4.0",
+		"@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "^0.1.12",
+		"@node-projects/web-component-designer-stylesheetservice-css-parser": "^0.1.4",
+		"es-module-shims": "^2.8.0",
 		"typescript": "^5.8.3"
 	}
 }

@@ -14,7 +14,7 @@ import { DomHelper } from '@node-projects/base-custom-webcomponent';
 import { DesignerView, IDesignItem, PaletteView, PreDefinedElementsService, PropertyGrid, WebcomponentManifestElementsService, WebcomponentManifestPropertiesService } from '@node-projects/web-component-designer';
 import createDefaultServiceContainer from '@node-projects/web-component-designer/dist/elements/services/DefaultServiceBootstrap.js';
 import { DesignerHtmlParserAndWriterService } from './DesignerHtmlParserAndWriterService.js';
-import { CssToolsStylesheetService } from '@node-projects/web-component-designer-stylesheetservice-css-tools';
+import { CssParserStylesheetService } from '@node-projects/web-component-designer-stylesheetservice-css-parser';
 
 await window.customElements.whenDefined("node-projects-designer-view");
 const designerView = <DesignerView>document.querySelector("node-projects-designer-view");
@@ -23,7 +23,7 @@ const paletteView = <PaletteView>document.getElementById("paletteView");
 let serviceContainer = createDefaultServiceContainer();
 let designerHtmlParserService = new DesignerHtmlParserAndWriterService(path);
 serviceContainer.register("htmlParserService", designerHtmlParserService);
-serviceContainer.register("stylesheetService", designerCanvas => new CssToolsStylesheetService(designerCanvas));
+serviceContainer.register("stylesheetService", designerCanvas => new CssParserStylesheetService(designerCanvas));
 //@ts-ignore
 let json = await import('@node-projects/web-component-designer/config/elements-native.json', { assert: { type: 'json' } })
 serviceContainer.register('elementsService', new PreDefinedElementsService('native', json.default));
