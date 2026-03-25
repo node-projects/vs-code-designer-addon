@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { DesignerOutlineProvider } from './DesignerOutlineProvider.js';
 
 export function getNonce() {
 	let text = '';
@@ -11,19 +12,21 @@ export function getNonce() {
 
 export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 
-	public static register(context: vscode.ExtensionContext): vscode.Disposable {
-		const provider = new DesignerTextEditor(context);
+	public static register(context: vscode.ExtensionContext): [vscode.Disposable[], DesignerOutlineProvider] {
+		let outlineProvider = new DesignerOutlineProvider();
+		const provider = new DesignerTextEditor(context, outlineProvider);
 		const providerRegistration = vscode.window.registerCustomEditorProvider(DesignerTextEditor.viewType, provider, {
 			webviewOptions: {
 				retainContextWhenHidden: true
 			}
 		});
-		return providerRegistration;
+		const outlineRegistration = vscode.window.registerCustomEditorOutlineProvider('designer.designerTextEditor', outlineProvider)
+		return [[providerRegistration, outlineRegistration], outlineProvider];
 	}
 
 	private static readonly viewType = 'designer.designerTextEditor';
 
-	constructor(private readonly context: vscode.ExtensionContext) { }
+	constructor(private readonly context: vscode.ExtensionContext, private readonly outline: DesignerOutlineProvider) { }
 
 	public async addCustomElementsJsons(webviewPanel: vscode.WebviewPanel) {
 		//TODO:
@@ -139,8 +142,16 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 						}
 					}
 					return;
+				case 'outlineData':
+					this.outline.updateFromWebview(e.items);
+					return;
+				case 'outlineActiveItem':
+					this.outline.setActive(e.id);
+					return;
 			}
 		});
+
+		this.outline.setWebview(webviewPanel.webview);
 	}
 
 	/**

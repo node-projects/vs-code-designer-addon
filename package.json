@@ -25,6 +25,20 @@
 		"customEditorOutline"
 	],
 	"contributes": {
+		"submenus": [
+			{
+				"id": "designer.outline.editSubmenu",
+				"label": "Edit"
+			},
+			{
+				"id": "designer.outline.modifySubmenu",
+				"label": "Modify"
+			},
+			{
+				"id": "designer.outline.viewSubmenu",
+				"label": "View"
+			}
+		],
 		"menus": {
 			"editor/title": [
 				{
@@ -39,6 +53,99 @@
 					"when": "true",
 					"group": "navigation"
 				}
+			],
+			"customEditor/outline/toolbar": [
+				{
+					"command": "designer.outline.toggleLock",
+					"group": "inline",
+					"when": "true"
+				},
+				{
+					"command": "designer.outline.toggleHideInDesigner",
+					"group": "inline",
+					"when": "true"
+				},
+				{
+					"command": "designer.outline.toggleHideAtRuntime",
+					"group": "inline",
+					"when": "true"
+				}
+			],
+			"customEditor/outline/context": [
+				{
+					"submenu": "designer.outline.editSubmenu",
+					"group": "1_edit"
+				},
+				{
+					"submenu": "designer.outline.modifySubmenu",
+					"group": "2_modify"
+				},
+				{
+					"submenu": "designer.outline.viewSubmenu",
+					"group": "3_view"
+				},
+				{
+					"command": "designer.outline.expandChildren",
+					"group": "4_expandCollapse@1"
+				},
+				{
+					"command": "designer.outline.collapseChildren",
+					"group": "4_expandCollapse@2"
+				}
+			],
+			"designer.outline.editSubmenu": [
+				{
+					"command": "designer.outline.copy",
+					"group": "1_clipboard@1"
+				},
+				{
+					"command": "designer.outline.cut",
+					"group": "1_clipboard@2"
+				},
+				{
+					"command": "designer.outline.paste",
+					"group": "1_clipboard@3"
+				},
+				{
+					"command": "designer.outline.delete",
+					"group": "2_delete@1"
+				}
+			],
+			"designer.outline.modifySubmenu": [
+				{
+					"command": "designer.outline.rotateLeft",
+					"group": "1_rotate@1"
+				},
+				{
+					"command": "designer.outline.rotateRight",
+					"group": "1_rotate@2"
+				},
+				{
+					"command": "designer.outline.toFront",
+					"group": "2_order@1"
+				},
+				{
+					"command": "designer.outline.moveForward",
+					"group": "2_order@2"
+				},
+				{
+					"command": "designer.outline.moveBackward",
+					"group": "2_order@3"
+				},
+				{
+					"command": "designer.outline.toBack",
+					"group": "2_order@4"
+				}
+			],
+			"designer.outline.viewSubmenu": [
+				{
+					"command": "designer.outline.moveTo",
+					"group": "1_navigation@1"
+				},
+				{
+					"command": "designer.outline.jumpTo",
+					"group": "1_navigation@2"
+				}
 			]
 		},
 		"commands": [
@@ -49,6 +156,77 @@
 					"light": "resources/light/editor.svg",
 					"dark": "resources/dark/editor.svg"
 				}
+			},
+			{
+				"command": "designer.outline.toggleLock",
+				"title": "Toggle Lock",
+				"icon": "$(lock)"
+			},
+			{
+				"command": "designer.outline.toggleHideInDesigner",
+				"title": "Toggle Hide in Designer",
+				"icon": "$(eye)"
+			},
+			{
+				"command": "designer.outline.toggleHideAtRuntime",
+				"title": "Toggle Hide at Runtime",
+				"icon": "$(eye-closed)"
+			},
+			{
+				"command": "designer.outline.copy",
+				"title": "Copy"
+			},
+			{
+				"command": "designer.outline.cut",
+				"title": "Cut"
+			},
+			{
+				"command": "designer.outline.paste",
+				"title": "Paste"
+			},
+			{
+				"command": "designer.outline.delete",
+				"title": "Delete"
+			},
+			{
+				"command": "designer.outline.rotateLeft",
+				"title": "Rotate Left"
+			},
+			{
+				"command": "designer.outline.rotateRight",
+				"title": "Rotate Right"
+			},
+			{
+				"command": "designer.outline.toFront",
+				"title": "To Front"
+			},
+			{
+				"command": "designer.outline.moveForward",
+				"title": "Move Forward"
+			},
+			{
+				"command": "designer.outline.moveBackward",
+				"title": "Move Backward"
+			},
+			{
+				"command": "designer.outline.toBack",
+				"title": "To Back"
+			},
+			{
+				"command": "designer.outline.moveTo",
+				"title": "Move To"
+			},
+			{
+				"command": "designer.outline.jumpTo",
+				"title": "Jump To"
+			},
+			{
+				"command": "designer.outline.expandChildren",
+				"title": "Expand Children"
+			},
+			{
+				"command": "designer.outline.collapseChildren",
+				"title": "Collapse Children"
 			}
 		],
 		"customEditors": [

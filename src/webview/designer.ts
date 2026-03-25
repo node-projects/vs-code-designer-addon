@@ -11,10 +11,101 @@ if (!window.CSSContainerRule)
     window.CSSContainerRule = class { }
 
 import { DomHelper } from '@node-projects/base-custom-webcomponent';
-import { DesignerView, IDesignItem, PaletteView, PreDefinedElementsService, PropertyGrid, WebcomponentManifestElementsService, WebcomponentManifestPropertiesService } from '@node-projects/web-component-designer';
+import { DesignerView, IDesignItem, NodeType, PaletteView, PreDefinedElementsService, PropertyGrid, WebcomponentManifestElementsService, WebcomponentManifestPropertiesService } from '@node-projects/web-component-designer';
 import createDefaultServiceContainer from '@node-projects/web-component-designer/dist/elements/services/DefaultServiceBootstrap.js';
 import { DesignerHtmlParserAndWriterService } from './DesignerHtmlParserAndWriterService.js';
 import { CssParserStylesheetService } from '@node-projects/web-component-designer-stylesheetservice-css-parser';
+
+// --- Outline tree serialization ---
+
+interface SerializedOutlineItem {
+    id: string;
+    label: string;
+    detail?: string;
+    icon?: string;
+    contextValue?: string;
+    children?: SerializedOutlineItem[];
+}
+
+let nextOutlineId = 0;
+const elementToOutlineId = new WeakMap<Element, string>();
+const outlineIdToDesignItem = new Map<string, IDesignItem>();
+
+function getOutlineId(item: IDesignItem): string {
+    let id = elementToOutlineId.get(item.element);
+    if (!id) {
+        id = `el-${nextOutlineId++}`;
+        elementToOutlineId.set(item.element, id);
+    }
+    return id;
+}
+
+function buildOutlineTree(item: IDesignItem): SerializedOutlineItem | null {
+    if (item.isEmptyTextNode) return null;
+
+    const id = getOutlineId(item);
+    outlineIdToDesignItem.set(id, item);
+
+    const children: SerializedOutlineItem[] = [];
+    if (item.hasChildren) {
+        for (const child of item.children()) {
+            const c = buildOutlineTree(child);
+            if (c) children.push(c);
+        }
+    }
+
+    let label: string;
+    let icon: string;
+    let detail: string | undefined;
+
+    if (item.nodeType === NodeType.TextNode) {
+        label = '#text';
+        detail = item.content?.substring(0, 60);
+        icon = 'symbol-string';
+    } else if (item.nodeType === NodeType.Comment) {
+        label = '#comment';
+        detail = item.content?.substring(0, 60);
+        icon = 'comment';
+    } else {
+        label = item.name;
+        if (item.id) detail = '#' + item.id;
+        icon = item.isRootItem ? 'layout' : 'symbol-class';
+    }
+
+    let contextValue = 'element';
+    if (item.lockAtDesignTime) contextValue += ':locked';
+    if (item.hideAtDesignTime) contextValue += ':hideDesign';
+    if (item.hideAtRunTime) contextValue += ':hideRuntime';
+
+    return {
+        id,
+        label,
+        detail,
+        icon,
+        contextValue,
+        children: children.length > 0 ? children : undefined,
+    };
+}
+
+function sendOutlineData(rootItem: IDesignItem) {
+    outlineIdToDesignItem.clear();
+    const tree = buildOutlineTree(rootItem);
+    vscode.postMessage({
+        type: 'outlineData',
+        items: tree ? [tree] : []
+    });
+}
+
+function sendActiveOutlineItem(selectedElements: IDesignItem[]) {
+    const primary = selectedElements.length > 0 ? selectedElements[0] : undefined;
+    const id = primary ? elementToOutlineId.get(primary.element) : undefined;
+    vscode.postMessage({
+        type: 'outlineActiveItem',
+        id: id ?? undefined
+    });
+}
+
+// --- End outline helpers ---
 
 await window.customElements.whenDefined("node-projects-designer-view");
 const designerView = <DesignerView>document.querySelector("node-projects-designer-view");
@@ -62,6 +153,8 @@ async function parseHTML(html: string) {
 }
 
 let parsing = true;
+let revealFromOutline = false;
+
 window.addEventListener('message', async event => {
     const message = event.data;
     switch (message.type) {
@@ -70,6 +163,7 @@ window.addEventListener('message', async event => {
             designerHtmlParserService.filename = message.filename;
             await parseHTML(message.text);
             parsing = false;
+            sendOutlineData(designerView.designerCanvas.rootDesignItem);
             break;
         case 'changeSelection':
             const pos = message.position;
@@ -89,14 +183,64 @@ window.addEventListener('message', async event => {
             }
             paletteView.loadControls(serviceContainer, serviceContainer.elementsServices);
             break;
+        case 'reveal': {
+            const designItem = outlineIdToDesignItem.get(message.id);
+            if (designItem) {
+                revealFromOutline = true;
+                designerView.instanceServiceContainer.selectionService.setSelectedElements([designItem]);
+                setTimeout(() => { revealFromOutline = false; }, 50);
+            }
+            break;
+        }
+        case 'outlineCommand': {
+            handleOutlineCommand(message.command);
+            break;
+        }
     }
 });
+
+function handleOutlineCommand(command: string) {
+    const selectedElements = [...designerView.instanceServiceContainer.selectionService.selectedElements];
+    if (selectedElements.length === 0) return;
+
+    switch (command) {
+        case 'toggleLock':
+            for (const item of selectedElements) {
+                item.lockAtDesignTime = !item.lockAtDesignTime;
+            }
+            sendOutlineData(designerView.designerCanvas.rootDesignItem);
+            break;
+        case 'toggleHideInDesigner':
+            for (const item of selectedElements) {
+                item.hideAtDesignTime = !item.hideAtDesignTime;
+            }
+            sendOutlineData(designerView.designerCanvas.rootDesignItem);
+            break;
+        case 'toggleHideAtRuntime':
+            for (const item of selectedElements) {
+                item.hideAtRunTime = !item.hideAtRunTime;
+            }
+            sendOutlineData(designerView.designerCanvas.rootDesignItem);
+            break;
+        // Context menu commands are dispatched as custom events
+        // so the host application can handle them
+        default:
+            window.dispatchEvent(new CustomEvent('designer-outline-command', {
+                detail: { command, selectedElements }
+            }));
+            break;
+    }
+}
 
 designerView.instanceServiceContainer.selectionService.onSelectionChanged.on(() => {
     let primarySelection = designerView.instanceServiceContainer.selectionService.primarySelection;
     if (primarySelection) {
         const selectionPosition = designerView.instanceServiceContainer.designItemDocumentPositionService.getPosition(primarySelection);
         vscode.postMessage({ type: 'setSelection', position: selectionPosition });
+    }
+    // Sync selection to outline (skip if the selection came from the outline itself)
+    if (!revealFromOutline) {
+        sendActiveOutlineItem([...designerView.instanceServiceContainer.selectionService.selectedElements]);
     }
 });
 /*designerView.instanceServiceContainer.stylesheetService.stylesheetChanged.on((event) => {
@@ -112,6 +256,8 @@ designerView.designerCanvas.onContentChanged.on(() => {
         }
         code = designerHtmlParserService.write(code, css);
         vscode.postMessage({ type: 'updateDocument', code: code });
+        // Rebuild outline tree after content changes
+        sendOutlineData(designerView.designerCanvas.rootDesignItem);
     }
 })
 
