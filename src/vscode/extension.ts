@@ -32,8 +32,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 	for (const [cmd, action] of Object.entries(outlineCommands)) {
 		context.subscriptions.push(
-			vscode.commands.registerCommand(cmd, (item?: { id?: string }) => {
-				outlineProvider.sendCommand(action, item?.id);
+			vscode.commands.registerCommand(cmd, (item?: { id?: string; uri?: vscode.Uri }) => {
+				if (item?.uri) {
+					outlineProvider.sendCommand(item.uri, action, item.id);
+				}
 			})
 		);
 	}

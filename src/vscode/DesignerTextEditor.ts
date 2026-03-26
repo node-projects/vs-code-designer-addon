@@ -102,6 +102,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 		webviewPanel.onDidDispose(() => {
 			changeDocumentSubscription.dispose();
 			changeTextEditorSelection.dispose();
+			this.outline.removeResource(document.uri);
 		});
 
 		// Receive message from the webview.
@@ -143,15 +144,15 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 					}
 					return;
 				case 'outlineData':
-					this.outline.updateFromWebview(e.items);
+					this.outline.updateFromWebview(document.uri, e.items);
 					return;
 				case 'outlineActiveItem':
-					this.outline.setActive(e.id);
+					this.outline.setActive(document.uri, e.id);
 					return;
 			}
 		});
 
-		this.outline.setWebview(webviewPanel.webview);
+		this.outline.setWebview(document.uri, webviewPanel.webview);
 	}
 
 	/**
