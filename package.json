@@ -304,7 +304,7 @@
 		"@node-projects/css-parser": "^5.2.0",
 		"@node-projects/lean-he-esm": "^3.4.1",
 		"@node-projects/node-html-parser-esm": "^6.4.1",
-		"@node-projects/web-component-designer": "^0.1.339",
+		"@node-projects/web-component-designer": "^0.1.340",
 		"@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent": "^0.1.5",
 		"@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "^0.1.12",
 		"@node-projects/web-component-designer-stylesheetservice-css-parser": "^0.1.4",

@@ -29,9 +29,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 	for (const cmd of outlineCommands) {
 		context.subscriptions.push(
-			vscode.commands.registerCommand(cmd, () => {
+			vscode.commands.registerCommand(cmd, (item?: { id?: string }) => {
 				const shortName = cmd.replace('designer.outline.', '');
-				outlineProvider.sendCommand(shortName);
+				outlineProvider.sendCommand(shortName, item?.id);
 			})
 		);
 	}

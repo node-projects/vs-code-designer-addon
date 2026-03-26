@@ -193,16 +193,24 @@ window.addEventListener('message', async event => {
             break;
         }
         case 'outlineCommand': {
-            handleOutlineCommand(message.command);
+            handleOutlineCommand(message.command, message.id);
             break;
         }
     }
 });
 
-function handleOutlineCommand(command: string) {
-    const selectedElements = [...designerView.instanceServiceContainer.selectionService.selectedElements];
+function handleOutlineCommand(command: string, outlineItemId?: string) {
+    let selectedElements: IDesignItem[];
+    if (outlineItemId) {
+        const item = outlineIdToDesignItem.get(outlineItemId);
+        if (!item) return;
+        selectedElements = [item];
+    } else {
+        selectedElements = [...designerView.instanceServiceContainer.selectionService.selectedElements];
+    }
     if (selectedElements.length === 0) return;
 
+    const modelCommandService = designerView.serviceContainer.modelCommandService;
     switch (command) {
         case 'toggleLock':
             for (const item of selectedElements) {
@@ -235,22 +243,22 @@ function handleOutlineCommand(command: string) {
             designerView.executeCommand({ type: CommandType.delete });
             break;
         case 'rotateLeft':
-            designerView.executeCommand({ type: CommandType.rotateCounterClockwise });
+            modelCommandService.executeCommand(designerView.designerCanvas, { type: CommandType.rotateCounterClockwise }, selectedElements);
             break;
         case 'rotateRight':
-            designerView.executeCommand({ type: CommandType.rotateClockwise });
+             modelCommandService.executeCommand(designerView.designerCanvas, { type: CommandType.rotateClockwise }, selectedElements);
             break;
         case 'toFront':
-            designerView.executeCommand({ type: CommandType.moveToFront });
+             modelCommandService.executeCommand(designerView.designerCanvas, { type: CommandType.moveToFront }, selectedElements);
             break;
         case 'moveForward':
-            designerView.executeCommand({ type: CommandType.moveForward });
+             modelCommandService.executeCommand(designerView.designerCanvas, { type: CommandType.moveForward }, selectedElements);
             break;
         case 'moveBackward':
-            designerView.executeCommand({ type: CommandType.moveBackward });
+             modelCommandService.executeCommand(designerView.designerCanvas, { type: CommandType.moveBackward }, selectedElements);
             break;
         case 'toBack':
-            designerView.executeCommand({ type: CommandType.moveToBack });
+             modelCommandService.executeCommand(designerView.designerCanvas, { type: CommandType.moveToBack }, selectedElements);
             break;
         case 'moveTo': {
             const item = selectedElements[0];

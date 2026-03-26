@@ -51,7 +51,7 @@ export class DesignerOutlineProvider implements vscode.CustomEditorOutlineProvid
     this._webview?.postMessage({ type: 'reveal', id: itemId });
   }
 
-  sendCommand(command: string): void {
-    this._webview?.postMessage({ type: 'outlineCommand', command });
+  sendCommand(command: string, itemId?: string): void {
+    this._webview?.postMessage({ type: 'outlineCommand', command, id: itemId });
   }
 }
