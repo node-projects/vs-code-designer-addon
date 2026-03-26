@@ -56,19 +56,34 @@
 			],
 			"customEditor/outline/toolbar": [
 				{
-					"command": "designer.outline.toggleLock",
-					"group": "inline",
-					"when": "true"
+					"command": "designer.outline.lock",
+					"group": "inline@1",
+					"when": "customEditorOutlineItem =~ /^(?!.*:locked)/"
 				},
 				{
-					"command": "designer.outline.toggleHideInDesigner",
-					"group": "inline",
-					"when": "true"
+					"command": "designer.outline.unlock",
+					"group": "inline@1",
+					"when": "customEditorOutlineItem =~ /:locked/"
 				},
 				{
-					"command": "designer.outline.toggleHideAtRuntime",
-					"group": "inline",
-					"when": "true"
+					"command": "designer.outline.hideInDesigner",
+					"group": "inline@2",
+					"when": "customEditorOutlineItem =~ /^(?!.*:hideDesign)/"
+				},
+				{
+					"command": "designer.outline.showInDesigner",
+					"group": "inline@2",
+					"when": "customEditorOutlineItem =~ /:hideDesign/"
+				},
+				{
+					"command": "designer.outline.hideAtRuntime",
+					"group": "inline@3",
+					"when": "customEditorOutlineItem =~ /^(?!.*:hideRuntime)/"
+				},
+				{
+					"command": "designer.outline.showAtRuntime",
+					"group": "inline@3",
+					"when": "customEditorOutlineItem =~ /:hideRuntime/"
 				}
 			],
 			"customEditor/outline/context": [
@@ -158,18 +173,33 @@
 				}
 			},
 			{
-				"command": "designer.outline.toggleLock",
-				"title": "Toggle Lock",
+				"command": "designer.outline.lock",
+				"title": "Lock",
+				"icon": "$(unlock)"
+			},
+			{
+				"command": "designer.outline.unlock",
+				"title": "Unlock",
 				"icon": "$(lock)"
 			},
 			{
-				"command": "designer.outline.toggleHideInDesigner",
-				"title": "Toggle Hide in Designer",
+				"command": "designer.outline.hideInDesigner",
+				"title": "Hide in Designer",
 				"icon": "$(eye)"
 			},
 			{
-				"command": "designer.outline.toggleHideAtRuntime",
-				"title": "Toggle Hide at Runtime",
+				"command": "designer.outline.showInDesigner",
+				"title": "Show in Designer",
+				"icon": "$(eye-closed)"
+			},
+			{
+				"command": "designer.outline.hideAtRuntime",
+				"title": "Hide at Runtime",
+				"icon": "$(eye)"
+			},
+			{
+				"command": "designer.outline.showAtRuntime",
+				"title": "Show at Runtime",
 				"icon": "$(eye-closed)"
 			},
 			{

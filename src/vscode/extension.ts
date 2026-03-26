@@ -1,23 +1,26 @@
 import * as vscode from 'vscode';
 import { DesignerTextEditor } from './DesignerTextEditor.js';
 
-const outlineCommands = [
-	'designer.outline.toggleLock',
-	'designer.outline.toggleHideInDesigner',
-	'designer.outline.toggleHideAtRuntime',
-	'designer.outline.copy',
-	'designer.outline.cut',
-	'designer.outline.paste',
-	'designer.outline.delete',
-	'designer.outline.rotateLeft',
-	'designer.outline.rotateRight',
-	'designer.outline.toFront',
-	'designer.outline.moveForward',
-	'designer.outline.moveBackward',
-	'designer.outline.toBack',
-	'designer.outline.moveTo',
-	'designer.outline.jumpTo',
-];
+const outlineCommands: Record<string, string> = {
+	'designer.outline.lock': 'toggleLock',
+	'designer.outline.unlock': 'toggleLock',
+	'designer.outline.hideInDesigner': 'toggleHideInDesigner',
+	'designer.outline.showInDesigner': 'toggleHideInDesigner',
+	'designer.outline.hideAtRuntime': 'toggleHideAtRuntime',
+	'designer.outline.showAtRuntime': 'toggleHideAtRuntime',
+	'designer.outline.copy': 'copy',
+	'designer.outline.cut': 'cut',
+	'designer.outline.paste': 'paste',
+	'designer.outline.delete': 'delete',
+	'designer.outline.rotateLeft': 'rotateLeft',
+	'designer.outline.rotateRight': 'rotateRight',
+	'designer.outline.toFront': 'toFront',
+	'designer.outline.moveForward': 'moveForward',
+	'designer.outline.moveBackward': 'moveBackward',
+	'designer.outline.toBack': 'toBack',
+	'designer.outline.moveTo': 'moveTo',
+	'designer.outline.jumpTo': 'jumpTo',
+};
 
 export function activate(context: vscode.ExtensionContext) {
 	const [registrations, outlineProvider] = DesignerTextEditor.register(context);
@@ -27,11 +30,10 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.executeCommand('vscode.openWith', uri, 'designer.designerTextEditor');
 	});
 
-	for (const cmd of outlineCommands) {
+	for (const [cmd, action] of Object.entries(outlineCommands)) {
 		context.subscriptions.push(
 			vscode.commands.registerCommand(cmd, (item?: { id?: string }) => {
-				const shortName = cmd.replace('designer.outline.', '');
-				outlineProvider.sendCommand(shortName, item?.id);
+				outlineProvider.sendCommand(action, item?.id);
 			})
 		);
 	}
