@@ -25,6 +25,20 @@
 		"customEditorOutline"
 	],
 	"contributes": {
+		"submenus": [
+			{
+				"id": "designer.outline.editSubmenu",
+				"label": "Edit"
+			},
+			{
+				"id": "designer.outline.modifySubmenu",
+				"label": "Modify"
+			},
+			{
+				"id": "designer.outline.viewSubmenu",
+				"label": "View"
+			}
+		],
 		"menus": {
 			"editor/title": [
 				{
@@ -39,6 +53,114 @@
 					"when": "true",
 					"group": "navigation"
 				}
+			],
+			"customEditor/outline/toolbar": [
+				{
+					"command": "designer.outline.lock",
+					"group": "inline@1",
+					"when": "customEditorOutlineItem =~ /^(?!.*:locked)/"
+				},
+				{
+					"command": "designer.outline.unlock",
+					"group": "inline@1",
+					"when": "customEditorOutlineItem =~ /:locked/"
+				},
+				{
+					"command": "designer.outline.hideInDesigner",
+					"group": "inline@2",
+					"when": "customEditorOutlineItem =~ /^(?!.*:hideDesign)/"
+				},
+				{
+					"command": "designer.outline.showInDesigner",
+					"group": "inline@2",
+					"when": "customEditorOutlineItem =~ /:hideDesign/"
+				},
+				{
+					"command": "designer.outline.hideAtRuntime",
+					"group": "inline@3",
+					"when": "customEditorOutlineItem =~ /^(?!.*:hideRuntime)/"
+				},
+				{
+					"command": "designer.outline.showAtRuntime",
+					"group": "inline@3",
+					"when": "customEditorOutlineItem =~ /:hideRuntime/"
+				}
+			],
+			"customEditor/outline/context": [
+				{
+					"submenu": "designer.outline.editSubmenu",
+					"group": "1_edit"
+				},
+				{
+					"submenu": "designer.outline.modifySubmenu",
+					"group": "2_modify"
+				},
+				{
+					"submenu": "designer.outline.viewSubmenu",
+					"group": "3_view"
+				},
+				{
+					"command": "designer.outline.expandChildren",
+					"group": "4_expandCollapse@1"
+				},
+				{
+					"command": "designer.outline.collapseChildren",
+					"group": "4_expandCollapse@2"
+				}
+			],
+			"designer.outline.editSubmenu": [
+				{
+					"command": "designer.outline.copy",
+					"group": "1_clipboard@1"
+				},
+				{
+					"command": "designer.outline.cut",
+					"group": "1_clipboard@2"
+				},
+				{
+					"command": "designer.outline.paste",
+					"group": "1_clipboard@3"
+				},
+				{
+					"command": "designer.outline.delete",
+					"group": "2_delete@1"
+				}
+			],
+			"designer.outline.modifySubmenu": [
+				{
+					"command": "designer.outline.rotateLeft",
+					"group": "1_rotate@1"
+				},
+				{
+					"command": "designer.outline.rotateRight",
+					"group": "1_rotate@2"
+				},
+				{
+					"command": "designer.outline.toFront",
+					"group": "2_order@1"
+				},
+				{
+					"command": "designer.outline.moveForward",
+					"group": "2_order@2"
+				},
+				{
+					"command": "designer.outline.moveBackward",
+					"group": "2_order@3"
+				},
+				{
+					"command": "designer.outline.toBack",
+					"group": "2_order@4"
+				}
+			],
+			"designer.outline.viewSubmenu": [
+				{
+					"command": "designer.outline.moveTo",
+					"group": "1_navigation@1"
+				},
+				{
+					"command": "designer.outline.jumpTo",
+					"group": "1_navigation@2"
+				}
 			]
 		},
 		"commands": [
@@ -49,6 +171,106 @@
 					"light": "resources/light/editor.svg",
 					"dark": "resources/dark/editor.svg"
 				}
+			},
+			{
+				"command": "designer.outline.lock",
+				"title": "Lock",
+				"icon": "$(unlock)"
+			},
+			{
+				"command": "designer.outline.unlock",
+				"title": "Unlock",
+				"icon": "$(lock)"
+			},
+			{
+				"command": "designer.outline.hideInDesigner",
+				"title": "Hide in Designer",
+				"icon": "$(eye)"
+			},
+			{
+				"command": "designer.outline.showInDesigner",
+				"title": "Show in Designer",
+				"icon": "$(eye-closed)"
+			},
+			{
+				"command": "designer.outline.hideAtRuntime",
+				"title": "Hide at Runtime",
+				"icon": "$(eye)"
+			},
+			{
+				"command": "designer.outline.showAtRuntime",
+				"title": "Show at Runtime",
+				"icon": "$(eye-closed)"
+			},
+			{
+				"command": "designer.outline.copy",
+				"title": "Copy",
+				"icon": "$(copy)"
+			},
+			{
+				"command": "designer.outline.cut",
+				"title": "Cut",
+				"icon": "$(scissors)"
+			},
+			{
+				"command": "designer.outline.paste",
+				"title": "Paste",
+				"icon": "$(clippy)"
+			},
+			{
+				"command": "designer.outline.delete",
+				"title": "Delete",
+				"icon": "$(trash)"
+			},
+			{
+				"command": "designer.outline.rotateLeft",
+				"title": "Rotate Left",
+				"icon": "$(debug-reverse-continue)"
+			},
+			{
+				"command": "designer.outline.rotateRight",
+				"title": "Rotate Right",
+				"icon": "$(debug-continue)"
+			},
+			{
+				"command": "designer.outline.toFront",
+				"title": "To Front",
+				"icon": "$(arrow-circle-up)"
+			},
+			{
+				"command": "designer.outline.moveForward",
+				"title": "Move Forward",
+				"icon": "$(arrow-up)"
+			},
+			{
+				"command": "designer.outline.moveBackward",
+				"title": "Move Backward",
+				"icon": "$(arrow-down)"
+			},
+			{
+				"command": "designer.outline.toBack",
+				"title": "To Back",
+				"icon": "$(arrow-circle-down)"
+			},
+			{
+				"command": "designer.outline.moveTo",
+				"title": "Move To",
+				"icon": "$(move)"
+			},
+			{
+				"command": "designer.outline.jumpTo",
+				"title": "Jump To",
+				"icon": "$(search)"
+			},
+			{
+				"command": "designer.outline.expandChildren",
+				"title": "Expand Children",
+				"icon": "$(expand-all)"
+			},
+			{
+				"command": "designer.outline.collapseChildren",
+				"title": "Collapse Children",
+				"icon": "$(collapse-all)"
 			}
 		],
 		"customEditors": [
@@ -112,7 +334,7 @@
 		"@node-projects/css-parser": "^5.2.0",
 		"@node-projects/lean-he-esm": "^3.4.1",
 		"@node-projects/node-html-parser-esm": "^6.4.1",
-		"@node-projects/web-component-designer": "^0.1.339",
+		"@node-projects/web-component-designer": "^0.1.340",
 		"@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent": "^0.1.5",
 		"@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "^0.1.12",
 		"@node-projects/web-component-designer-stylesheetservice-css-parser": "^0.1.4",
