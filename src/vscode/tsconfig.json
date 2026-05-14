@@ -4,6 +4,7 @@
 		"module": "commonjs",
 		"target": "ESNext",
 		"lib": ["ES2023"],
+		"types": ["node"],
 		"outDir": "../../out/vscode",
 		"sourceMap": true,
 		"strict": true,

@@ -52,7 +52,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 		parts.pop();
 		const folder = parts.join('/');
 
-		webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview, folder);
+		webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview, folder, document.fileName);
 
 		let disableSelectionChange = false;
 		let disableUpdateWebview = false;
@@ -146,7 +146,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 	/**
 	 * Get the static html used for the editor webviews.
 	 */
-	private getHtmlForWebview(webview: vscode.Webview, documentFolder: string): string {
+	private getHtmlForWebview(webview: vscode.Webview, documentFolder: string, documentFilename: string): string {
 		// Local path to main script run in the webview
 		const scriptPathOnDisk = vscode.Uri.joinPath(this.context.extensionUri, 'out', 'webview', 'designer.js');
 
@@ -174,6 +174,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 			</script>
 			<script nonce="${nonce}" type="text/javascript">
 			  window['__$vscodeWorkspaceUri'] = '${workspaceUri}'
+			  window['__$designerDocumentFilename'] = ${JSON.stringify(documentFilename)}
 			</script>
 			<script nonce="${nonce}" src="${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/es-module-shims/dist/es-module-shims.js'))}"></script>
 			<script nonce="${nonce}" src="${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/typescript/lib/typescript.js'))}"></script>
@@ -186,6 +187,8 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 				  "@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent/dist/service/htmlParserService/BaseCustomWebcomponentParserService.js'))}",
 				  "@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer-htmlparserservice-nodehtmlparser/dist/service/htmlParserService/NodeHtmlParserService.js'))}",
 				  "@node-projects/web-component-designer-stylesheetservice-css-parser": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer-stylesheetservice-css-parser/dist/service/stylesheetservice/CssParserStylesheetService.js'))}",
+				  "@node-projects/web-component-designer-mermaid": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer-mermaid/dist/index.js'))}",
+				  "mermaid": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/mermaid/dist/mermaid.esm.min.mjs'))}",
 				  "@node-projects/lean-he-esm": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/lean-he-esm/lib/index-min.js'))}",
 				  "@node-projects/node-html-parser-esm": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/node-html-parser-esm/dist/index.js'))}",
 				  "@node-projects/css-parser": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/css-parser/dist/index-min.js'))}"

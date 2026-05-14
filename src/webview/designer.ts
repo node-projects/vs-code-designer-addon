@@ -1,9 +1,12 @@
 const vscode = acquireVsCodeApi();
 //@ts-ignore
 const workspaceuri = window['__$vscodeWorkspaceUri'];
+//@ts-ignore
+const documentFilename = window['__$designerDocumentFilename'] as string | undefined;
 
 const url = new URL(import.meta.url);
 const path = url.pathname.replace("out/webview/designer.js", "");
+const isMermaidDocument = !!documentFilename && /\.(mmd|mermaid)$/i.test(documentFilename);
 
 //TODO: vscode does not yet know CSSContainerRule
 if (!window.CSSContainerRule)
@@ -15,18 +18,22 @@ import { DesignerView, IDesignItem, PaletteView, PreDefinedElementsService, Prop
 import createDefaultServiceContainer from '@node-projects/web-component-designer/dist/elements/services/DefaultServiceBootstrap.js';
 import { DesignerHtmlParserAndWriterService } from './DesignerHtmlParserAndWriterService.js';
 import { CssParserStylesheetService } from '@node-projects/web-component-designer-stylesheetservice-css-parser';
+import { createMermaidDesignerServiceContainer } from '@node-projects/web-component-designer-mermaid';
 
 await window.customElements.whenDefined("node-projects-designer-view");
 const designerView = <DesignerView>document.querySelector("node-projects-designer-view");
 const propertyGrid = <PropertyGrid>document.getElementById("propertyGrid");
 const paletteView = <PaletteView>document.getElementById("paletteView");
-let serviceContainer = createDefaultServiceContainer();
-let designerHtmlParserService = new DesignerHtmlParserAndWriterService(path);
-serviceContainer.register("htmlParserService", designerHtmlParserService);
-serviceContainer.register("stylesheetService", designerCanvas => new CssParserStylesheetService(designerCanvas));
-//@ts-ignore
-let json = await import('@node-projects/web-component-designer/config/elements-native.json', { assert: { type: 'json' } })
-serviceContainer.register('elementsService', new PreDefinedElementsService('native', json.default));
+let serviceContainer = isMermaidDocument ? createMermaidDesignerServiceContainer() : createDefaultServiceContainer();
+let designerHtmlParserService: DesignerHtmlParserAndWriterService | null = null;
+if (!isMermaidDocument) {
+    designerHtmlParserService = new DesignerHtmlParserAndWriterService(path);
+    serviceContainer.register("htmlParserService", designerHtmlParserService);
+    serviceContainer.register("stylesheetService", designerCanvas => new CssParserStylesheetService(designerCanvas));
+    //@ts-ignore
+    let json = await import('@node-projects/web-component-designer/config/elements-native.json', { assert: { type: 'json' } })
+    serviceContainer.register('elementsService', new PreDefinedElementsService('native', json.default));
+}
 
 designerView.initialize(serviceContainer);
 propertyGrid.serviceContainer = serviceContainer;
@@ -67,7 +74,8 @@ window.addEventListener('message', async event => {
     switch (message.type) {
         case 'update':
             parsing = true;
-            designerHtmlParserService.filename = message.filename;
+            if (designerHtmlParserService)
+                designerHtmlParserService.filename = message.filename;
             await parseHTML(message.text);
             parsing = false;
             break;
@@ -78,6 +86,8 @@ window.addEventListener('message', async event => {
             designerView.instanceServiceContainer.selectionService.setSelectionByTextRange(pos, posEnd);
             break;
         case 'manifests':
+            if (isMermaidDocument)
+                break;
             let n = 0;
             for (let m of message.manifests) {
                 n++;
@@ -102,15 +112,17 @@ designerView.instanceServiceContainer.selectionService.onSelectionChanged.on(() 
 /*designerView.instanceServiceContainer.stylesheetService.stylesheetChanged.on((event) => {
     console.log(event);
 });*/
-designerView.designerCanvas.onContentChanged.on(() => {
+designerView.designerCanvas.instanceServiceContainer.onContentChanged.on(() => {
     if (!parsing) {
         let code = designerView.getDesignerHTML();
-        let st = designerView.instanceServiceContainer.stylesheetService.getStylesheets()?.find(x => x.name == 'css');
-        let css = '';
-        if (st) {
-            css = st.content;
+        if (designerHtmlParserService) {
+            let st = designerView.instanceServiceContainer.stylesheetService.getStylesheets()?.find(x => x.name == 'css');
+            let css = '';
+            if (st) {
+                css = st.content;
+            }
+            code = designerHtmlParserService.write(code, css);
         }
-        code = designerHtmlParserService.write(code, css);
         vscode.postMessage({ type: 'updateDocument', code: code });
     }
 })

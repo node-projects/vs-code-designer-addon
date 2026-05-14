@@ -79,6 +79,12 @@
 					},
 					{
 						"filenamePattern": "*.svelte"
+					},
+					{
+						"filenamePattern": "*.mmd"
+					},
+					{
+						"filenamePattern": "*.mermaid"
 					}
 				],
 				"priority": "option"
@@ -98,25 +104,26 @@
 		"esbuild": "esbuild ./out/vscode/extension.js --bundle --outfile=out/vscodeWeb/extension.js --external:vscode --format=cjs --platform=node"
 	},
 	"devDependencies": {
-		"@types/node": "^25.5.0",
-		"@types/vscode": "^1.77.0",
+		"@types/node": "^25.7.0",
+		"@types/vscode": "^1.118.0",
 		"@types/vscode-webview": "^1.57.5",
-		"@typescript-eslint/eslint-plugin": "^8.57.2",
-		"@typescript-eslint/parser": "^8.57.2",
-		"@vscode/vsce": "^3.7.1",
-		"esbuild": "^0.27.4",
-		"eslint": "^10.1.0"
+		"@typescript-eslint/eslint-plugin": "^8.59.3",
+		"@typescript-eslint/parser": "^8.59.3",
+		"@vscode/vsce": "^3.9.1",
+		"esbuild": "^0.28.0",
+		"eslint": "^10.3.0"
 	},
 	"dependencies": {
-		"@node-projects/base-custom-webcomponent": "^0.45.0",
+		"@node-projects/base-custom-webcomponent": "^0.46.0",
 		"@node-projects/css-parser": "^5.2.0",
 		"@node-projects/lean-he-esm": "^3.4.1",
 		"@node-projects/node-html-parser-esm": "^6.4.1",
-		"@node-projects/web-component-designer": "^0.1.339",
+		"@node-projects/web-component-designer": "^0.2.24",
 		"@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent": "^0.1.5",
-		"@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "^0.1.12",
-		"@node-projects/web-component-designer-stylesheetservice-css-parser": "^0.1.4",
-		"es-module-shims": "^2.8.0",
-		"typescript": "^5.8.3"
+		"@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "^0.1.13",
+		"@node-projects/web-component-designer-mermaid": "^0.1.1",
+		"@node-projects/web-component-designer-stylesheetservice-css-parser": "^0.1.5",
+		"es-module-shims": "^2.8.1",
+		"typescript": "^6.0.3"
 	}
 }
