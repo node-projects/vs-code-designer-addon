@@ -29,7 +29,9 @@ export class VsCodeLiveShareCollaborationTransport implements ICollaborationTran
     private _service: ICollaborationService | null = null;
     private _session: ICollaborationSession | null = null;
 
-    constructor(private readonly _vscode: VsCodeApi, private readonly _documentId: string) {
+    constructor(private readonly _vscode: VsCodeApi, private readonly _documentId: string) { }
+
+    requestStatus(): void {
         this._vscode.postMessage({ type: 'collaboration:ready', documentId: this._documentId });
     }
 

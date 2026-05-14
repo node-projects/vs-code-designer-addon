@@ -128,6 +128,8 @@ window.addEventListener('message', async event => {
     }
 });
 
+collaborationTransport?.requestStatus();
+
 designerView.instanceServiceContainer.selectionService.onSelectionChanged.on(() => {
     let primarySelection = designerView.instanceServiceContainer.selectionService.primarySelection;
     if (primarySelection) {
