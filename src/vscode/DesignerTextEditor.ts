@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { LiveShareCollaborationBridge } from './LiveShareCollaborationBridge.js';
 
 export function getNonce() {
 	let text = '';
@@ -11,8 +12,8 @@ export function getNonce() {
 
 export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 
-	public static register(context: vscode.ExtensionContext): vscode.Disposable {
-		const provider = new DesignerTextEditor(context);
+	public static register(context: vscode.ExtensionContext, collaborationBridge: LiveShareCollaborationBridge): vscode.Disposable {
+		const provider = new DesignerTextEditor(context, collaborationBridge);
 		const providerRegistration = vscode.window.registerCustomEditorProvider(DesignerTextEditor.viewType, provider, {
 			webviewOptions: {
 				retainContextWhenHidden: true
@@ -23,7 +24,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 
 	private static readonly viewType = 'designer.designerTextEditor';
 
-	constructor(private readonly context: vscode.ExtensionContext) { }
+	constructor(private readonly context: vscode.ExtensionContext, private readonly collaborationBridge: LiveShareCollaborationBridge) { }
 
 	public async addCustomElementsJsons(webviewPanel: vscode.WebviewPanel) {
 		//TODO:
@@ -52,7 +53,9 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 		parts.pop();
 		const folder = parts.join('/');
 
-		webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview, folder, document.fileName);
+		const collaborationDocumentId = await this.collaborationBridge.getDocumentId(document.uri);
+		webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview, folder, document.fileName, collaborationDocumentId);
+		const collaborationRegistration = this.collaborationBridge.registerWebview(collaborationDocumentId, webviewPanel);
 
 		let disableSelectionChange = false;
 		let disableUpdateWebview = false;
@@ -99,10 +102,14 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 		webviewPanel.onDidDispose(() => {
 			changeDocumentSubscription.dispose();
 			changeTextEditorSelection.dispose();
+			collaborationRegistration.dispose();
 		});
 
 		// Receive message from the webview.
 		webviewPanel.webview.onDidReceiveMessage(e => {
+			if (this.collaborationBridge.handleWebviewMessage(webviewPanel.webview, e))
+				return;
+
 			switch (e.type) {
 				case 'firstLoad':
 					updateWebview();
@@ -146,7 +153,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 	/**
 	 * Get the static html used for the editor webviews.
 	 */
-	private getHtmlForWebview(webview: vscode.Webview, documentFolder: string, documentFilename: string): string {
+	private getHtmlForWebview(webview: vscode.Webview, documentFolder: string, documentFilename: string, collaborationDocumentId: string): string {
 		// Local path to main script run in the webview
 		const scriptPathOnDisk = vscode.Uri.joinPath(this.context.extensionUri, 'out', 'webview', 'designer.js');
 
@@ -175,6 +182,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 			<script nonce="${nonce}" type="text/javascript">
 			  window['__$vscodeWorkspaceUri'] = '${workspaceUri}'
 			  window['__$designerDocumentFilename'] = ${JSON.stringify(documentFilename)}
+			  window['__$designerCollaborationDocumentId'] = ${JSON.stringify(collaborationDocumentId)}
 			</script>
 			<script nonce="${nonce}" src="${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/es-module-shims/dist/es-module-shims.js'))}"></script>
 			<script nonce="${nonce}" src="${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/typescript/lib/typescript.js'))}"></script>
@@ -187,6 +195,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 				  "@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent/dist/service/htmlParserService/BaseCustomWebcomponentParserService.js'))}",
 				  "@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer-htmlparserservice-nodehtmlparser/dist/service/htmlParserService/NodeHtmlParserService.js'))}",
 				  "@node-projects/web-component-designer-stylesheetservice-css-parser": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer-stylesheetservice-css-parser/dist/service/stylesheetservice/CssParserStylesheetService.js'))}",
+				  "@node-projects/web-component-designer-collaboration-service": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer-collaboration-service/dist/index.js'))}",
 				  "@node-projects/web-component-designer-mermaid": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/web-component-designer-mermaid/dist/index.js'))}",
 				  "mermaid": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/mermaid/dist/mermaid.esm.min.mjs'))}",
 				  "@node-projects/lean-he-esm": "${webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, '/node_modules/@node-projects/lean-he-esm/lib/index-min.js'))}",

@@ -3,6 +3,8 @@ const vscode = acquireVsCodeApi();
 const workspaceuri = window['__$vscodeWorkspaceUri'];
 //@ts-ignore
 const documentFilename = window['__$designerDocumentFilename'] as string | undefined;
+//@ts-ignore
+const collaborationDocumentId = window['__$designerCollaborationDocumentId'] as string | undefined;
 
 const url = new URL(import.meta.url);
 const path = url.pathname.replace("out/webview/designer.js", "");
@@ -18,7 +20,9 @@ import { DesignerView, IDesignItem, PaletteView, PreDefinedElementsService, Prop
 import createDefaultServiceContainer from '@node-projects/web-component-designer/dist/elements/services/DefaultServiceBootstrap.js';
 import { DesignerHtmlParserAndWriterService } from './DesignerHtmlParserAndWriterService.js';
 import { CssParserStylesheetService } from '@node-projects/web-component-designer-stylesheetservice-css-parser';
+import { setupCollaborationService } from '@node-projects/web-component-designer-collaboration-service';
 import { createMermaidDesignerServiceContainer } from '@node-projects/web-component-designer-mermaid';
+import { VsCodeLiveShareCollaborationTransport } from './VsCodeLiveShareCollaborationTransport.js';
 
 await window.customElements.whenDefined("node-projects-designer-view");
 const designerView = <DesignerView>document.querySelector("node-projects-designer-view");
@@ -34,11 +38,17 @@ if (!isMermaidDocument) {
     let json = await import('@node-projects/web-component-designer/config/elements-native.json', { assert: { type: 'json' } })
     serviceContainer.register('elementsService', new PreDefinedElementsService('native', json.default));
 }
+setupCollaborationService(serviceContainer);
 
 designerView.initialize(serviceContainer);
 propertyGrid.serviceContainer = serviceContainer;
 propertyGrid.instanceServiceContainer = designerView.instanceServiceContainer;
 paletteView.loadControls(serviceContainer, serviceContainer.elementsServices);
+const collaborationTransport = collaborationDocumentId
+    ? new VsCodeLiveShareCollaborationTransport(vscode, collaborationDocumentId)
+    : null;
+if (collaborationTransport)
+    designerView.instanceServiceContainer.collaborationService?.attachTransport(collaborationTransport);
 
 function fixDesignItemsPaths(designItem: IDesignItem) {
     if (designItem.hasChildren) {
@@ -98,6 +108,22 @@ window.addEventListener('message', async event => {
                 serviceContainer.register("propertyService", new WebcomponentManifestPropertiesService(nm, manifest));
             }
             paletteView.loadControls(serviceContainer, serviceContainer.elementsServices);
+            break;
+        case 'collaboration:status':
+            collaborationTransport?.handleStatus(message);
+            break;
+        case 'collaboration:message':
+            await collaborationTransport?.handleEnvelope(message.envelope);
+            break;
+        case 'collaboration:applySnapshot':
+            await collaborationTransport?.applySnapshot(message.snapshot);
+            break;
+        case 'collaboration:requestSnapshot':
+            vscode.postMessage({
+                type: 'collaboration:snapshotResponse',
+                requestId: message.requestId,
+                snapshot: collaborationTransport?.createSnapshot()
+            });
             break;
     }
 });

@@ -119,11 +119,13 @@
 		"@node-projects/lean-he-esm": "^3.4.1",
 		"@node-projects/node-html-parser-esm": "^6.4.1",
 		"@node-projects/web-component-designer": "^0.2.24",
+		"@node-projects/web-component-designer-collaboration-service": "^0.2.0",
 		"@node-projects/web-component-designer-htmlparserservice-base-custom-webcomponent": "^0.1.5",
 		"@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "^0.1.13",
 		"@node-projects/web-component-designer-mermaid": "^0.1.1",
 		"@node-projects/web-component-designer-stylesheetservice-css-parser": "^0.1.5",
 		"es-module-shims": "^2.8.1",
-		"typescript": "^6.0.3"
+		"typescript": "^6.0.3",
+		"vsls": "^1.0.4753"
 	}
 }

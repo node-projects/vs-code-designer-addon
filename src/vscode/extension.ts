@@ -1,10 +1,13 @@
 import * as vscode from 'vscode';
 import { DesignerTextEditor } from './DesignerTextEditor.js';
+import { LiveShareCollaborationBridge } from './LiveShareCollaborationBridge.js';
 
 export function activate(context: vscode.ExtensionContext) {
 	//context.subscriptions.push(
 	//	vscode.window.registerWebviewViewProvider(ColorsViewProvider.viewType, provider));
-	context.subscriptions.push(DesignerTextEditor.register(context));
+	const collaborationBridge = new LiveShareCollaborationBridge(context);
+	context.subscriptions.push(collaborationBridge);
+	context.subscriptions.push(DesignerTextEditor.register(context, collaborationBridge));
 
 	vscode.commands.registerCommand('designer.openInDesignerTextEditor', (uri: vscode.Uri) => {
 		vscode.commands.executeCommand('vscode.openWith', uri, 'designer.designerTextEditor');
