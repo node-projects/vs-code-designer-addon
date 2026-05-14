@@ -19,6 +19,9 @@
 	"activationEvents": [
 		"onWebviewPanel:designer"
 	],
+	"extensionDependencies": [
+		"ms-vsliveshare.vsliveshare"
+	],
 	"main": "./out/vscode/extension.js",
 	"browser": "./out/vscodeWeb/extension.js",
 	"enabledApiProposals": [

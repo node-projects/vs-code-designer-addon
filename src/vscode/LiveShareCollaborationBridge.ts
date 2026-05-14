@@ -288,7 +288,7 @@ export class LiveShareCollaborationBridge implements vscode.Disposable {
 	private postStatus(webview: vscode.Webview, documentId: string): void {
 		const session = this.liveShare?.session;
 		const peerId = this.getPeerId(session);
-		const available = !!session?.id && !!peerId && (session.role === vsls.Role.Host || this.sharedServiceProxy?.isServiceAvailable);
+		const available = !!session?.id && !!peerId && (this.sharedService?.isServiceAvailable || this.sharedServiceProxy?.isServiceAvailable);
 		this.log(`Posting collaboration status to webview. available=${available} role=${this.getRoleName(session?.role)} sessionId=${session?.id ?? 'none'} peer=${peerId ?? 'none'} documentId=${documentId}`);
 		void webview.postMessage({
 			type: 'collaboration:status',
