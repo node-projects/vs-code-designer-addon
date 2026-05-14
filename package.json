@@ -49,6 +49,10 @@
 					"light": "resources/light/editor.svg",
 					"dark": "resources/dark/editor.svg"
 				}
+			},
+			{
+				"command": "designer.showCollaborationLogs",
+				"title": "Designer: Show Collaboration Logs"
 			}
 		],
 		"customEditors": [
