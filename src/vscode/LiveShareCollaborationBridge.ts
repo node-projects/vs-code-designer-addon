@@ -1,10 +1,21 @@
 import * as vscode from 'vscode';
-import * as vsls from 'vsls/vscode';
+import type * as vsls from 'vsls/vscode';
 
+const liveShareExtensionId = 'ms-vsliveshare.vsliveshare';
+const liveShareApiVersion = '1.0.4753';
 const serviceName = 'webComponentDesignerCollaboration';
 const notificationName = 'designer-collaboration-message';
 const snapshotRequestName = 'designer-collaboration-snapshot';
 const snapshotTimeout = 5000;
+const liveShareRole = {
+	Host: 1 as vsls.Role,
+	Guest: 2 as vsls.Role
+};
+
+type LiveShareExtensionApi = {
+	getApi?: (requestedApiVersion: string, callingExtensionId?: string) => Promise<vsls.LiveShare | null>;
+	getApiAsync?: (requestedApiVersion: string) => Promise<vsls.LiveShare | null>;
+};
 
 type CollaborationEnvelope = {
 	id: string;
@@ -45,7 +56,7 @@ export class LiveShareCollaborationBridge implements vscode.Disposable {
 
 	async getDocumentId(uri: vscode.Uri): Promise<string> {
 		const liveShare = await this.getLiveShare();
-		if (liveShare?.session?.role === vsls.Role.Host && uri.scheme === 'file') {
+		if (liveShare?.session?.role === liveShareRole.Host && uri.scheme === 'file') {
 			try {
 				const documentId = liveShare.convertLocalUriToShared(uri).toString();
 				this.log(`Mapped host document URI to shared URI. local=${uri.toString()} shared=${documentId}`);
@@ -124,7 +135,7 @@ export class LiveShareCollaborationBridge implements vscode.Disposable {
 		if (this.liveShare !== undefined)
 			return this.liveShare;
 
-		this.liveShare = await vsls.getApi(this.context.extension.id);
+		this.liveShare = await this.getLiveShareApi();
 		this.log(this.liveShare
 			? `Live Share API acquired. sessionId=${this.liveShare.session?.id ?? 'none'} role=${this.getRoleName(this.liveShare.session?.role)} peer=${this.getPeerId(this.liveShare.session) ?? 'none'}`
 			: 'Live Share API unavailable. Is the Live Share extension installed and active?');
@@ -143,6 +154,30 @@ export class LiveShareCollaborationBridge implements vscode.Disposable {
 		return this.liveShare;
 	}
 
+	private async getLiveShareApi(): Promise<vsls.LiveShare | null> {
+		const liveShareExtension = vscode.extensions.getExtension<LiveShareExtensionApi>(liveShareExtensionId);
+		if (!liveShareExtension)
+			return null;
+
+		try {
+			const extensionApi = liveShareExtension.isActive
+				? liveShareExtension.exports
+				: await liveShareExtension.activate();
+			if (!extensionApi)
+				return null;
+
+			if (extensionApi.getApi)
+				return extensionApi.getApi(liveShareApiVersion, this.context.extension.id);
+
+			if (extensionApi.getApiAsync)
+				return extensionApi.getApiAsync(liveShareApiVersion);
+		} catch (error) {
+			this.log(`Live Share API activation failed. ${error instanceof Error ? error.message : String(error)}`);
+		}
+
+		return null;
+	}
+
 	private async ensureLiveShareReady(): Promise<void> {
 		const liveShare = await this.getLiveShare();
 		if (!liveShare?.session?.id) {
@@ -150,7 +185,7 @@ export class LiveShareCollaborationBridge implements vscode.Disposable {
 			return;
 		}
 
-		if (liveShare.session.role === vsls.Role.Host && !this.sharedService) {
+		if (liveShare.session.role === liveShareRole.Host && !this.sharedService) {
 			this.log(`Sharing Live Share service "${serviceName}".`);
 			this.sharedService = await liveShare.shareService(serviceName);
 			this.log(this.sharedService
@@ -162,7 +197,7 @@ export class LiveShareCollaborationBridge implements vscode.Disposable {
 				this.log(`Received remote snapshot request. documentId=${documentId}`);
 				return this.getLocalSnapshot(documentId);
 			});
-		} else if (liveShare.session.role === vsls.Role.Guest && !this.sharedServiceProxy) {
+		} else if (liveShare.session.role === liveShareRole.Guest && !this.sharedServiceProxy) {
 			this.log(`Requesting Live Share shared service proxy "${serviceName}".`);
 			this.sharedServiceProxy = await liveShare.getSharedService(serviceName);
 			this.log(this.sharedServiceProxy
@@ -195,9 +230,9 @@ export class LiveShareCollaborationBridge implements vscode.Disposable {
 		};
 
 		this.log(`Sending collaboration envelope. role=${this.getRoleName(session.role)} documentId=${documentId} payloadType=${this.getPayloadType(payload)}`);
-		if (session.role === vsls.Role.Host)
+		if (session.role === liveShareRole.Host)
 			this.sharedService?.notify(notificationName, envelope);
-		else if (session.role === vsls.Role.Guest)
+		else if (session.role === liveShareRole.Guest)
 			this.sharedServiceProxy?.notify(notificationName, envelope);
 	}
 
@@ -215,7 +250,7 @@ export class LiveShareCollaborationBridge implements vscode.Disposable {
 		}
 
 		this.log(`Received Live Share envelope. role=${this.getRoleName(session?.role)} documentId=${envelope.documentId} from=${envelope.fromPeerId} payloadType=${this.getPayloadType(envelope.payload)}`);
-		if (session?.role === vsls.Role.Host)
+		if (session?.role === liveShareRole.Host)
 			this.sharedService?.notify(notificationName, envelope);
 
 		let delivered = 0;
@@ -231,7 +266,7 @@ export class LiveShareCollaborationBridge implements vscode.Disposable {
 	private async requestRemoteSnapshot(documentId: string, webview: vscode.Webview): Promise<void> {
 		await this.ensureLiveShareReady();
 		const liveShare = await this.getLiveShare();
-		if (liveShare?.session?.role !== vsls.Role.Guest || !this.sharedServiceProxy?.isServiceAvailable) {
+		if (liveShare?.session?.role !== liveShareRole.Guest || !this.sharedServiceProxy?.isServiceAvailable) {
 			this.log(`Skipped remote snapshot request. role=${this.getRoleName(liveShare?.session?.role)} proxyAvailable=${this.sharedServiceProxy?.isServiceAvailable ?? false} documentId=${documentId}`);
 			return;
 		}
@@ -297,7 +332,7 @@ export class LiveShareCollaborationBridge implements vscode.Disposable {
 			sessionId: session?.id,
 			peerId,
 			displayName: session?.user?.displayName ?? (peerId ? `peer-${session?.peerNumber}` : undefined),
-			role: session?.role === vsls.Role.Host ? 'host' : session?.role === vsls.Role.Guest ? 'guest' : 'none'
+			role: session?.role === liveShareRole.Host ? 'host' : session?.role === liveShareRole.Guest ? 'guest' : 'none'
 		});
 	}
 
@@ -315,7 +350,7 @@ export class LiveShareCollaborationBridge implements vscode.Disposable {
 	}
 
 	private getRoleName(role: vsls.Role | undefined): string {
-		return role === vsls.Role.Host ? 'host' : role === vsls.Role.Guest ? 'guest' : 'none';
+		return role === liveShareRole.Host ? 'host' : role === liveShareRole.Guest ? 'guest' : 'none';
 	}
 
 	private getPayloadType(payload: unknown): string {
