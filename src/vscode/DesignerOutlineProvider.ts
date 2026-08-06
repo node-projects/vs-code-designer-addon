@@ -20,54 +20,54 @@
     }));
   }
 
-  interface ResourceState {
+  interface EditorState {
     items: vscode.CustomEditorOutlineItem[];
-    webview: vscode.Webview;
+    context: vscode.CustomEditorOutlineContext;
   }
 
   export class DesignerOutlineProvider implements vscode.CustomEditorOutlineProvider {
-    private readonly _onDidChangeOutline = new vscode.EventEmitter<vscode.Uri>();
+    private readonly _onDidChangeOutline = new vscode.EventEmitter<vscode.CustomEditorOutlineContext>();
     readonly onDidChangeOutline = this._onDidChangeOutline.event;
 
-    private readonly _onDidChangeActiveItem = new vscode.EventEmitter<{ uri: vscode.Uri; itemId: string | undefined }>();
+    private readonly _onDidChangeActiveItem = new vscode.EventEmitter<{ context: vscode.CustomEditorOutlineContext; itemId: string | undefined }>();
     readonly onDidChangeActiveItem = this._onDidChangeActiveItem.event;
 
-    private readonly _resources = new Map<string, ResourceState>();
+    private readonly _editors = new Map<vscode.WebviewPanel, EditorState>();
 
-    setWebview(resource: vscode.Uri, webview: vscode.Webview): void {
-      const state = this._resources.get(resource.toString());
-      if (state) {
-        state.webview = webview;
-      } else {
-        this._resources.set(resource.toString(), { items: [], webview });
-      }
+    addEditor(uri: vscode.Uri, webviewPanel: vscode.WebviewPanel): void {
+      this._editors.set(webviewPanel, { items: [], context: { uri, webviewPanel } });
     }
 
-    removeResource(resource: vscode.Uri): void {
-      this._resources.delete(resource.toString());
+    removeEditor(webviewPanel: vscode.WebviewPanel): void {
+      this._editors.delete(webviewPanel);
     }
 
-    updateFromWebview(resource: vscode.Uri, serializedItems: SerializedOutlineItem[]): void {
-      const state = this._resources.get(resource.toString());
+    updateFromWebview(webviewPanel: vscode.WebviewPanel, serializedItems: SerializedOutlineItem[]): void {
+      const state = this._editors.get(webviewPanel);
       if (state) {
         state.items = convertItems(serializedItems);
+        this._onDidChangeOutline.fire(state.context);
       }
-      this._onDidChangeOutline.fire(resource);
     }
 
-    setActive(resource: vscode.Uri, itemId: string | undefined): void {
-      this._onDidChangeActiveItem.fire({ uri: resource, itemId });
+    setActive(webviewPanel: vscode.WebviewPanel, itemId: string | undefined): void {
+      const state = this._editors.get(webviewPanel);
+      if (state) {
+        this._onDidChangeActiveItem.fire({ context: state.context, itemId });
+      }
     }
 
-    provideOutline(resource: vscode.Uri, _token: vscode.CancellationToken): vscode.CustomEditorOutlineItem[] {
-      return this._resources.get(resource.toString())?.items ?? [];
+    provideOutline(context: vscode.CustomEditorOutlineContext, _token: vscode.CancellationToken): vscode.CustomEditorOutlineItem[] {
+      return this._editors.get(context.webviewPanel)?.items ?? [];
     }
 
-    revealItem(resource: vscode.Uri, itemId: string): void {
-      this._resources.get(resource.toString())?.webview?.postMessage({ type: 'reveal', id: itemId });
+    revealItem(context: vscode.CustomEditorOutlineContext, itemId: string): void {
+      context.webviewPanel.webview.postMessage({ type: 'reveal', id: itemId });
     }
 
     sendCommand(resource: vscode.Uri, command: string, itemId?: string): void {
-      this._resources.get(resource.toString())?.webview?.postMessage({ type: 'outlineCommand', command, id: itemId });
+      const editors = [...this._editors.values()].filter(editor => editor.context.uri.toString() === resource.toString());
+      const editor = editors.find(candidate => candidate.context.webviewPanel.active) ?? editors[0];
+      editor?.context.webviewPanel.webview.postMessage({ type: 'outlineCommand', command, id: itemId });
     }
   }

@@ -12,15 +12,15 @@
 	"engines": {
 		"vscode": "^1.77.0"
 	},
+	"enabledApiProposals": [
+		"customEditorOutline"
+	],
 	"categories": [
 		"Programming Languages",
 		"Visualization"
 	],
 	"activationEvents": [
 		"onWebviewPanel:designer"
-	],
-	"extensionDependencies": [
-		"ms-vsliveshare.vsliveshare"
 	],
 	"main": "./out/vscode/extension.js",
 	"browser": "./out/vscodeWeb/extension.js",

@@ -21,7 +21,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 				retainContextWhenHidden: true
 			}
 		});
-		const outlineRegistration = vscode.window.registerCustomEditorOutlineProvider('designer.designerTextEditor', outlineProvider)
+		const outlineRegistration = vscode.window.registerCustomEditorOutlineProvider('designer.designerTextEditor', outlineProvider);
 		return [[providerRegistration, outlineRegistration], outlineProvider];
 	}
 
@@ -42,9 +42,11 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 			for (const f of vscode.workspace.workspaceFolders) {
 				const p = vscode.Uri.joinPath(f.uri, 'custom-elements.json');
 				try {
-					const stat = await vscode.workspace.fs.stat(p);
+					await vscode.workspace.fs.stat(p);
 					manifests.push(webviewPanel.webview.asWebviewUri(p).toString());
-				} catch { }
+				} catch {
+					// This workspace folder does not contain a custom elements manifest.
+				}
 			}
 		}
 
@@ -63,6 +65,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 		const collaborationDocumentId = await this.collaborationBridge.getDocumentId(document.uri);
 		webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview, folder, document.fileName, collaborationDocumentId);
 		const collaborationRegistration = this.collaborationBridge.registerWebview(collaborationDocumentId, webviewPanel);
+		this.outline.addEditor(document.uri, webviewPanel);
 
 		let disableSelectionChange = false;
 		let disableUpdateWebview = false;
@@ -110,7 +113,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 			changeDocumentSubscription.dispose();
 			changeTextEditorSelection.dispose();
 			collaborationRegistration.dispose();
-			this.outline.removeResource(document.uri);
+			this.outline.removeEditor(webviewPanel);
 		});
 
 		// Receive message from the webview.
@@ -135,6 +138,7 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 							new vscode.Range(0, 0, document.lineCount, 0), e.code);
 						return vscode.workspace.applyEdit(edit);
 					}
+					return;
 				}
 				case 'setSelection':
 					{
@@ -143,8 +147,8 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 							disableSelectionChange = true;
 							for (const editor of vscode.window.visibleTextEditors) {
 								if (editor.document == document) {
-									let point1 = editor.document.positionAt(e.position.start);
-									let point2 = editor.document.positionAt(e.position.start + e.position.length);
+									const point1 = editor.document.positionAt(e.position.start);
+									const point2 = editor.document.positionAt(e.position.start + e.position.length);
 									editor.selection = new vscode.Selection(point1, point2);
 								}
 							}
@@ -155,15 +159,14 @@ export class DesignerTextEditor implements vscode.CustomTextEditorProvider {
 					}
 					return;
 				case 'outlineData':
-					this.outline.updateFromWebview(document.uri, e.items);
+					this.outline.updateFromWebview(webviewPanel, e.items);
 					return;
 				case 'outlineActiveItem':
-					this.outline.setActive(document.uri, e.id);
+					this.outline.setActive(webviewPanel, e.id);
 					return;
 			}
 		});
 
-		this.outline.setWebview(document.uri, webviewPanel.webview);
 	}
 
 	/**
